@@ -31,7 +31,17 @@ dependencies:
   flutter:
     sdk: flutter
   flexify: ^2.1.1
+  flutter_svg: ^2.0.17
+  http: ^1.3.0
+  provider: ^6.1.2
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  url_launcher: ^6.3.1
+  hive_generator: ^2.0.1
+  build_runner: ^2.4.15
   cupertino_icons: ^1.0.8
+  intl: ^0.18.1
+  carousel_slider: ^5.0.0
 
 dev_dependencies:
   flutter_test:
@@ -60,8 +70,73 @@ flutter:
     - assets/images/image 185.png
     - assets/images/splash.jpg
     - assets/images/image 228.png
+    - assets/images/image 188.png
+    - assets/images/cupcakes.jpg
+    - assets/images/hoteats.png
+    - assets/images/brownies.jpg
+    - assets/images/cake-slices.jpg
+    - assets/images/photo-cake.jpg
+    - assets/images/fruit-cakes.jpg
+    - assets/images/kids-cake.jpg
+    - assets/images/IMG_3136 1.png
+    - assets/images/image 91.png
+    - assets/images/image 84.png
+    - assets/images/cake-slice.png
+    - assets/images/orie.png
+    - assets/images/cnb-stamp 1.png
+    - assets/images/Soft Star.svg
+    - assets/images/Group 615.svg
+    - assets/images/Group 620.svg
+    - assets/images/Group 665.svg
+    - assets/images/Group 347(1).svg
+    - assets/images/Arrow 3.svg
+    - assets/images/date-range.svg
+    - assets/images/date.svg
+    - assets/images/Group 655.svg
+    - assets/images/Gmail Logo.png
+    - assets/images/Password.png
+    - assets/images/show.png
+    - assets/images/invisible.png
+    - assets/images/Floral_Cake.png
+    - assets/images/Group 684.svg
+    - assets/images/Group 684(1).svg
+    - assets/images/Vector.svg
+    - assets/images/image.jpg
+    - assets/images/image.png
+    - assets/images/category.png
+    - assets/images/franchises.png
+    - assets/images/home.svg
+    - assets/images/cake.svg
+    - assets/images/store.svg
+    - assets/images/basket.svg
+    - assets/images/magnifier.svg
+    - assets/images/store1.svg
+    - assets/images/call.svg
+    - assets/images/mail.svg
+    - assets/images/category-cake.png
+    - assets/images/category(1).png
+    - assets/images/category(2).png
+    - assets/images/category(3).png
+    - assets/images/category(4).png
+    - assets/images/category(5).png
+    - assets/images/bg.png
+    - assets/images/Vector(1).svg
+    - assets/images/Vector(2).svg
+    - assets/images/Vector(3).svg
+    - assets/images/Frame.svg
+    - assets/images/empty-cart.svg
+    - assets/images/34.svg
+    - assets/images/image 180.jpg
+    - assets/images/image 180.png
+    - assets/images/image 189.png
+    - assets/images/image 190.png
+    - assets/images/postal-code.svg
+    - assets/images/account 1.svg
+    - assets/images/account 2.svg
+    - assets/images/user.svg
 
-  # An image asset can refer to one or more resolution-specific "variants", see
+
+      # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images
 
   # For details regarding adding assets from package dependencies, see
