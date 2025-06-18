@@ -193,6 +193,7 @@ class _PickupStoreScreenState extends State<PickupStoreScreen> {
                       return _buildStoreLocation(
                         store[index],
                         context,
+                        provider
                       );
                     },
                   ),
@@ -372,7 +373,7 @@ class _PickupStoreScreenState extends State<PickupStoreScreen> {
   }
 }
 
-Widget _buildStoreLocation(Map<String, dynamic> store, BuildContext context,){
+Widget _buildStoreLocation(Map<String, dynamic> store, BuildContext context, ShortProvider provider,){
   Future<void> makePhoneCall(String phoneNumber) async {
     final Uri uri = Uri(scheme: 'tel', path: phoneNumber.replaceAll(' ', ''));
     if (!await canLaunchUrl(uri)) {
@@ -526,6 +527,7 @@ Widget _buildStoreLocation(Map<String, dynamic> store, BuildContext context,){
           30.verticalSpace,
           GestureDetector(
             onTap: (){
+              provider.selectStore(store);
               double screenWidth =
                   MediaQuery.of(context).size.width;
               if (screenWidth > 800) {

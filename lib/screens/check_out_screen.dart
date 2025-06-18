@@ -4,8 +4,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:short_app/models/product_model.dart';
 import 'package:short_app/provider/short_provider.dart';
-import 'package:short_app/screens/deliveryscreen/address_screen.dart';
-import 'package:short_app/screens/deliveryscreen/delivery_screen.dart';
+import 'package:short_app/screens/order_confirmation_screen.dart';
+
+import '../models/person_model.dart';
+import 'coupons_screen.dart';
+import 'deliveryscreen/date_time_screen.dart';
 
 class CheckOutScreen extends StatefulWidget {
   const CheckOutScreen({super.key});
@@ -18,14 +21,17 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
   bool _isExpanded = true;
   bool _isExpands = true;
   bool _isExpand = true;
-  bool _isExpan = true;
-  int _selectedMethod = 0;
+  // bool _isExpan = true;
+  // int _selectedMethod = 0;
+  bool isSelected = false;
+  bool selected = false;
 
   final List<String> paymentOptions = ['PayPal Payment','Credit/Debit Card', 'Klarna Pay in 30 days'];
   @override
   Widget build(BuildContext context) {
     return Consumer<ShortProvider>(builder: (context, provider,_){
       final List<Product> cartProduct = provider.cartProducts.toList();
+      List<Person> user = provider.users.toList();
       return SafeArea(
         child: Scaffold(
           backgroundColor: Color(0xFFDBE5FF),
@@ -144,7 +150,19 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
                                   Expanded(
+                                    flex: 1,
+                                    child: Image.asset(
+                                      'assets/images/image.jpg',
+                                      width: 252.rw,
+                                      height: 185.rh,
+                                      fit: BoxFit.cover,
+                                    )
+                                  ),
+                                  80.horizontalSpace,
+                                  Expanded(
+                                    flex: 3,
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           'Pickup Store',
@@ -156,7 +174,16 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                         ),
                                         10.verticalSpace,
                                         Text(
-                                          '',
+                                          provider.selectedStoreTitle['title'],
+                                          style: TextStyle(
+                                            color: Color(0xFF000000),
+                                            fontSize: 42.rt,
+                                            fontWeight: FontWeight.w700
+                                          ),
+                                        ),
+                                        10.verticalSpace,
+                                        Text(
+                                          provider.selectedStoreTitle['address'],
                                           style: TextStyle(
                                             color: Color(0xFF000000),
                                             fontSize: 32.rt,
@@ -198,10 +225,11 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       ],
                                     )
                                   ),
+                                  20.horizontalSpace,
                                   Expanded(
-                                    flex: 5,
+                                    flex: 4,
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           provider.date,
@@ -210,33 +238,44 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                             fontSize: 40.rt,
                                             fontWeight: FontWeight.w700
                                           ),
+                                          textAlign: TextAlign.start,
                                         ),
                                         10.verticalSpace,
                                         Text(
-                                          provider.time,
+                                          provider.selectedTime,
                                           style: TextStyle(
                                             color: Color(0xFF000000),
                                             fontSize: 40.rt,
-                                            fontWeight: FontWeight.w700
+                                            fontWeight: FontWeight.w400
                                           ),
-                                        )
+                                          textAlign: TextAlign.start,
+                                        ),
                                       ],
                                     )
                                   ),
-                                  IconButton(
-                                    onPressed: (){
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => Delivery1Screen(postCode: '',),
-                                        ),
-                                      );
-                                    },
-                                    icon: Icon(
-                                      Icons.edit,
-                                      size: 42.rw,
-                                      color: Color(0xFF000000),
-                                    )
+                                  Expanded(
+                                    flex: 1,
+                                    child: IconButton(
+                                      onPressed: (){
+                                        double screenWidth =
+                                            MediaQuery.of(context).size.width;
+                                        if (screenWidth > 800) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => DateTimeScreen(),
+                                            ),
+                                          );
+                                        } else {
+                                          _showBottomSheet1(context);
+                                        }
+                                      },
+                                      icon: Icon(
+                                        Icons.edit,
+                                        size: 42.rw,
+                                        color: Color(0xFF000000),
+                                      )
+                                    ),
                                   )
                                 ],
                               ),
@@ -262,14 +301,52 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                       ],
                                     )
                                   ),
-                                  Expanded(
+                                  50.horizontalSpace,
+                                  user.isEmpty
+                                      ? Expanded(
                                     flex: 5,
-                                      child: provider.address.isNotEmpty
-                                          ? Column(
+                                      child: Column(
                                         crossAxisAlignment: CrossAxisAlignment.center,
                                         children: [
                                           Text(
-                                            '${provider.address[0]['first_name']} ${provider.address[0]['last_name']}',
+                                            '${provider.firstName} ${provider.lastName}',
+                                            style: TextStyle(
+                                              color: Color(0xFF000000),
+                                              fontSize: 36.rt,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                          10.verticalSpace,
+                                          Text(
+                                            provider.email,
+                                            style: TextStyle(
+                                              color: Color(0xFF000000),
+                                              fontSize: 36.rt,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                          10.verticalSpace,
+                                          Text(
+                                            provider.mobile,
+                                            style: TextStyle(
+                                              color: Color(0xFF000000),
+                                              fontSize: 36.rt,
+                                              fontWeight: FontWeight.w500,
+                                            ),
+                                            textAlign: TextAlign.start,
+                                          ),
+                                        ],
+                                      )
+                                  )
+                                      : Expanded(
+                                      flex: 5,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${user[0].firstName} ${user[0].lastName}',
                                             style: TextStyle(
                                               color: Color(0xFF000000),
                                               fontSize: 36.rt,
@@ -278,7 +355,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                           ),
                                           10.verticalSpace,
                                           Text(
-                                            provider.address[0]['email'],
+                                            user[0].email,
                                             style: TextStyle(
                                               color: Color(0xFF000000),
                                               fontSize: 36.rt,
@@ -287,7 +364,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                           ),
                                           10.verticalSpace,
                                           Text(
-                                            provider.address[0]['contact_number'],
+                                            user[0].mobile,
                                             style: TextStyle(
                                               color: Color(0xFF000000),
                                               fontSize: 36.rt,
@@ -296,17 +373,16 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                           ),
                                         ],
                                       )
-                                          :Container()
                                   ),
                                   IconButton(
                                     onPressed: (){
                                       // final int addressId = provider.address[0]['id'];
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (_) => AddressScreen(address: provider.address[0]),
-                                        ),
-                                      );
+                                      // Navigator.push(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (_) => AddressScreen(address: provider.address[0]),
+                                      //   ),
+                                      // );
                                     },
                                     icon: Icon(
                                       Icons.edit,
@@ -348,14 +424,14 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 ),
                               ),
                               10.verticalSpace,
-                              Text(
-                                'We can delivery to “${provider.address[0]['postcode']}” postcode.',
-                                style: TextStyle(
-                                  color: Color(0xFF000000),
-                                  fontSize: 40.rt,
-                                  fontWeight: FontWeight.w400
-                                ),
-                              ),
+                              // Text(
+                              //   'We can delivery to “${provider.address[0]['postcode']}” postcode.',
+                              //   style: TextStyle(
+                              //     color: Color(0xFF000000),
+                              //     fontSize: 40.rt,
+                              //     fontWeight: FontWeight.w400
+                              //   ),
+                              // ),
                               30.verticalSpace,
                               GestureDetector(
                                 onTap: (){},
@@ -503,7 +579,8 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                     if (_isExpand)...[
                       Padding(
                         padding: EdgeInsets.only(left: 60.rw, right: 60.rw, top: 10.rh, bottom: 30.rh),
-                        child: Container(
+                        child: provider.selectedCoupon.isEmpty
+                            ? Container(
                           height: 100.rh,
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -518,7 +595,19 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                           ),
                           padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 20.rh),
                           child: GestureDetector(
-                            onTap: (){},
+                            onTap: (){
+                              double screenWidth = MediaQuery.of(context).size.width;
+                              if (screenWidth > 800) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => CouponsScreen(),
+                                  ),
+                                );
+                              } else {
+                                _showBottomSheet(context);
+                              }
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -538,6 +627,100 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               ],
                             ),
                           ),
+                        )
+                            : Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20.rs),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.08),
+                                offset: Offset(0, 4),
+                                blurRadius: 4,
+                              ),
+                            ],
+                          ),
+                          padding: EdgeInsets.symmetric(horizontal: 60.rw, vertical: 30.rh),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/images/party-popper.svg',
+                                width: 115.rw,
+                                height: 115.rh,
+                                fit: BoxFit.cover,
+                              ),
+                              10.verticalSpace,
+                              Text(
+                                'Yahoo! Congratulations',
+                                style: TextStyle(
+                                  color: Color(0xFF00A870),
+                                  fontSize: 50.rt,
+                                  fontWeight: FontWeight.w700
+                                ),
+                              ),
+                              Text(
+                                '10 % off. You Saved £${provider.selectedCoupon['discount'].toString()}',
+                                style: TextStyle(
+                                  color: Color(0xFF000000),
+                                  fontSize: 36.rt,
+                                  fontWeight: FontWeight.w400
+                                ),
+                              ),
+                              20.verticalSpace,
+                              Divider(height: 1,thickness: 1, color: Color(0xFFCDCDCD)),
+                              20.verticalSpace,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        'Coupon Applied',
+                                        style: TextStyle(
+                                          color: Color(0xFF000000),
+                                          fontSize: 36.rt,
+                                          fontWeight: FontWeight.w500
+                                        ),
+                                      ),
+                                      Text(
+                                        ' “${provider.selectedCoupon['coupon']}”',
+                                        style: TextStyle(
+                                          color: Color(0xFF000000),
+                                          fontSize: 36.rt,
+                                          fontWeight: FontWeight.w700
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  GestureDetector(
+                                    onTap: (){
+                                      double screenWidth = MediaQuery.of(context).size.width;
+                                      if (screenWidth > 800) {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) => CouponsScreen(),
+                                          ),
+                                        );
+                                      } else {
+                                        _showBottomSheet(context);
+                                      }
+                                    },
+                                    child: Text(
+                                      'Change',
+                                      style: TextStyle(
+                                        color: Color(0xFF2D46C1),
+                                        fontSize: 40.rt,
+                                        fontWeight: FontWeight.w500
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
                         ),
                       ),
                       Padding(
@@ -554,7 +737,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                               ),
                             ],
                           ),
-                          padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 20.rh),
+                          padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 30.rh),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -570,7 +753,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '£${provider.totalAmount.toString()}',
+                                    '£${provider.totalAmount.toStringAsFixed(2)}',
                                     style: TextStyle(
                                       color: Color(0xFF000000),
                                       fontSize: 36.rt,
@@ -580,11 +763,34 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                 ],
                               ),
                               30.verticalSpace,
-                              Row(
+                              // Row(
+                              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              //   children: [
+                              //     Text(
+                              //       'Packaging fee',
+                              //       style: TextStyle(
+                              //         color: Color(0xFF000000),
+                              //         fontSize: 36.rt,
+                              //         fontWeight: FontWeight.w500
+                              //       ),
+                              //     ),
+                              //     Text(
+                              //       '£${provider.packagingFee.toString()}',
+                              //       style: TextStyle(
+                              //         color: Color(0xFF000000),
+                              //         fontSize: 36.rt,
+                              //         fontWeight: FontWeight.w500
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              // 30.verticalSpace,
+                              provider.selectedCoupon.isNotEmpty
+                                  ?Row(
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Packaging fee',
+                                    'Coupon (${provider.selectedCoupon['coupon']})',
                                     style: TextStyle(
                                       color: Color(0xFF000000),
                                       fontSize: 36.rt,
@@ -592,7 +798,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '£${provider.packagingFee.toString()}',
+                                    '(10% Off)£${provider.selectedCoupon['discount']}',
                                     style: TextStyle(
                                       color: Color(0xFF000000),
                                       fontSize: 36.rt,
@@ -600,7 +806,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     ),
                                   ),
                                 ],
-                              ),
+                              ):SizedBox.shrink(),
                               30.verticalSpace,
                               Divider(height: 1,thickness: 1,color: Color(0xFFCDCDCD)),
                               30.verticalSpace,
@@ -616,7 +822,7 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                                     ),
                                   ),
                                   Text(
-                                    '£${provider.grandTotal.toString()}',
+                                    '£${provider.grandTotal.toStringAsFixed(2)}',
                                     style: TextStyle(
                                       color: Color(0xFF000000),
                                       fontSize: 36.rt,
@@ -635,93 +841,125 @@ class _CheckOutScreenState extends State<CheckOutScreen> {
                 ),
                 30.verticalSpace,
                 Divider(height: 1,thickness: 0,color: Color.fromRGBO(11, 17, 86, 0.4)),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 80.rw, vertical: 50.rh),
-                      child: GestureDetector(
-                        onTap: () {
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: [
+                //     Padding(
+                //       padding: EdgeInsets.symmetric(horizontal: 80.rw, vertical: 50.rh),
+                //       child: GestureDetector(
+                //         onTap: () {
+                //           setState(() {
+                //             _isExpan = !_isExpan;
+                //           });
+                //         },
+                //         child: Row(
+                //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //           children: [
+                //             Text(
+                //               'PAYMENT',
+                //               style: TextStyle(
+                //                 color: Color(0xFF0B1156),
+                //                 fontSize: 40.rt,
+                //                 fontWeight: FontWeight.w700,
+                //               ),
+                //             ),
+                //             Icon(
+                //               _isExpan ? Icons.arrow_drop_down : Icons.arrow_right,
+                //               size: 60.rw,
+                //               color: Color(0xFF000000),
+                //             ),
+                //           ],
+                //         ),
+                //       ),
+                //     ),
+                //     if (_isExpan)...[
+                //       Padding(
+                //         padding: EdgeInsets.only(left: 60.rw, right: 60.rw, top: 10.rh, bottom: 30.rh),
+                //         child: Container(
+                //           decoration: BoxDecoration(
+                //             borderRadius: BorderRadius.circular(20.rs),
+                //             // boxShadow: [
+                //             //   BoxShadow(
+                //             //     color: Colors.black.withOpacity(0.08),
+                //             //     offset: Offset(0, 4),
+                //             //     blurRadius: 4,
+                //             //   ),
+                //             // ],
+                //           ),
+                //           padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 20.rh),
+                //           child: ListView.separated(
+                //             shrinkWrap: true,
+                //             physics: NeverScrollableScrollPhysics(),
+                //             itemCount: paymentOptions.length,
+                //             separatorBuilder: (context, index) => 10.verticalSpace,
+                //             itemBuilder: (context, index)=> Container(
+                //               decoration: BoxDecoration(
+                //                 color: Colors.white,
+                //                 borderRadius: BorderRadius.circular(20.rs),
+                //               ),
+                //               child: RadioListTile<int>(
+                //                 value: index,
+                //                 groupValue: _selectedMethod,
+                //                 onChanged: (value) {
+                //                   setState(() {
+                //                     _selectedMethod = value!;
+                //                   });
+                //                 },
+                //                 title: Text(
+                //                   paymentOptions[index],
+                //                   style: TextStyle(
+                //                     color: Color(0xFF000000),
+                //                     fontSize: 36.rt,
+                //                     fontWeight: FontWeight.w500
+                //                   ),
+                //                 ),
+                //                 contentPadding: EdgeInsets.symmetric(horizontal: 12.rw),
+                //               ),
+                //             ),
+                //           ),
+                //         ),
+                //       ),
+                //     ]
+                //   ],
+                // ),
+                // 30.verticalSpace,
+                // Divider(height: 1,thickness: 0,color: Color.fromRGBO(11, 17, 86, 0.4)),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 20),
+                  child: Row(
+                    children: [
+                      Checkbox(
+                        value: selected,
+                        checkColor: Color(0xFFFFFFFF),
+                        onChanged: (val) {
                           setState(() {
-                            _isExpan = !_isExpan;
+                            selected = val ?? false;
                           });
                         },
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'PAYMENT',
-                              style: TextStyle(
-                                color: Color(0xFF0B1156),
-                                fontSize: 40.rt,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            Icon(
-                              _isExpan ? Icons.arrow_drop_down : Icons.arrow_right,
-                              size: 60.rw,
-                              color: Color(0xFF000000),
-                            ),
-                          ],
-                        ),
                       ),
-                    ),
-                    if (_isExpan)...[
-                      Padding(
-                        padding: EdgeInsets.only(left: 60.rw, right: 60.rw, top: 10.rh, bottom: 30.rh),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20.rs),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.black.withOpacity(0.08),
-                            //     offset: Offset(0, 4),
-                            //     blurRadius: 4,
-                            //   ),
-                            // ],
-                          ),
-                          padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 20.rh),
-                          child: ListView.separated(
-                            shrinkWrap: true,
-                            physics: NeverScrollableScrollPhysics(),
-                            itemCount: paymentOptions.length,
-                            separatorBuilder: (context, index) => 10.verticalSpace,
-                            itemBuilder: (context, index)=> Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(20.rs),
-                              ),
-                              child: RadioListTile<int>(
-                                value: index,
-                                groupValue: _selectedMethod,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _selectedMethod = value!;
-                                  });
-                                },
-                                title: Text(
-                                  paymentOptions[index],
-                                  style: TextStyle(
-                                    color: Color(0xFF000000),
-                                    fontSize: 36.rt,
-                                    fontWeight: FontWeight.w500
-                                  ),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 12.rw),
-                              ),
-                            ),
-                          ),
+                      30.horizontalSpace,
+                      Text(
+                        'I would like to subscribe to newsletter',
+                        style: TextStyle(
+                            color: Color(0xFF000000),
+                            fontSize: 38.rt,
+                            fontWeight: FontWeight.w500
                         ),
-                      ),
-                    ]
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-                30.verticalSpace,
-                Divider(height: 1,thickness: 0,color: Color.fromRGBO(11, 17, 86, 0.4)),
                 Padding(
                   padding: EdgeInsets.only(left: 60.rw, right: 60.rw, top: 50.rh, bottom: 50.rh),
                   child: GestureDetector(
-                    onTap: (){},
+                    onTap: (){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => OrderConfirmationScreen(),
+                        ),
+                      );
+                    },
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.black,
@@ -883,12 +1121,12 @@ Widget _buildItems(Product cartProduct, ShortProvider provider){
                       ),
                     ),
                     10.verticalSpace,
-                    Divider(
+                    provider.message.isNotEmpty?Divider(
                       height : 1,
                       thickness: 0,
                       color: Color(0xFFB6B6B6),
-                    ),
-                    Padding(
+                    ):SizedBox.shrink(),
+                    provider.message.isNotEmpty?Padding(
                       padding: EdgeInsets.symmetric(horizontal: 20.rw, vertical: 20.rh),
                       child: Text(
                         provider.message,
@@ -899,7 +1137,7 @@ Widget _buildItems(Product cartProduct, ShortProvider provider){
                         ),
                         textAlign: TextAlign.center,
                       ),
-                    )
+                    ):SizedBox.shrink()
                   ],
                 ),
               ): const SizedBox.shrink(),
@@ -993,5 +1231,25 @@ Widget _buildItems(Product cartProduct, ShortProvider provider){
         ),
       ],
     ),
+  );
+}
+
+void _showBottomSheet1(BuildContext context,) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Color(0xFFFACFCF),
+    builder: (BuildContext context) {
+      return DateTimeScreen();
+    },
+  );
+}
+
+void _showBottomSheet(BuildContext context,) {
+  showModalBottomSheet(
+    context: context,
+    backgroundColor: Color(0xFFFACFCF),
+    builder: (BuildContext context) {
+      return CouponsScreen();
+    },
   );
 }

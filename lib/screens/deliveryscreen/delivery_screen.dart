@@ -223,7 +223,6 @@ class _Delivery1ScreenState extends State<Delivery1Screen> {
                               if (selectedDate != null) {
                                 final formatted = DateFormat('dd MMM yyyy').format(selectedDate);
                                 _dateController.text = formatted;
-
                                 final String date = formatted;
                                 provider.selectedDate(date);
                               }

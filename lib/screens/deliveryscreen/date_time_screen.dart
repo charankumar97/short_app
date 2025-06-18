@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:short_app/models/person_model.dart';
 import 'package:short_app/provider/short_provider.dart';
+import 'package:short_app/screens/deliveryscreen/personal_details_screen.dart';
+import '../check_out_screen.dart';
 
 class DateTimeScreen extends StatefulWidget {
   const DateTimeScreen({super.key});
@@ -16,9 +19,27 @@ class _DateTimeScreenState extends State<DateTimeScreen> {
   final TextEditingController _dateController = TextEditingController();
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final provider = Provider.of<ShortProvider>(context, listen: false);
+      final formatted = DateFormat('dd MMM yyyy').format(DateTime.now());
+      _dateController.text = formatted;
+      provider.selectedDate(formatted);
+    });
+  }
+
+  @override
+  void dispose() {
+    _dateController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<ShortProvider>(builder: (context, provider,_){
       List<String> pickTime = provider.pickUpTime.toList();
+      List<Person> user = provider.users.toList();
       return ClipRRect(
         borderRadius: BorderRadius.vertical(top: Radius.circular(40.rs)),
         child: SafeArea(
@@ -151,6 +172,7 @@ class _DateTimeScreenState extends State<DateTimeScreen> {
                                   color: Colors.black,
                                 ),
                               ),
+                              readOnly: true,
                               onTap: () async {
                                 DateTime? selectedDate = await showDatePicker(
                                   context: context,
@@ -161,6 +183,8 @@ class _DateTimeScreenState extends State<DateTimeScreen> {
                                 if (selectedDate != null) {
                                   final formatted = DateFormat('dd MMM yyyy').format(selectedDate);
                                   _dateController.text = formatted;
+                                  final String date = formatted;
+                                  provider.selectedDate(date);
                                 }
                               },
                             ),
@@ -191,7 +215,21 @@ class _DateTimeScreenState extends State<DateTimeScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 30.rh),
                     child: GestureDetector(
-                      onTap: (){},
+                      onTap: (){
+                        user.isEmpty
+                            ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => PersonalDetailsScreen(),
+                          ),
+                        )
+                            : Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => CheckOutScreen(),
+                          ),
+                        );
+                      },
                       child: Container(
                         alignment: Alignment.center,
                         decoration: BoxDecoration(

@@ -4,7 +4,6 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:short_app/provider/short_provider.dart';
 import 'package:short_app/screens/sub_category/sup_sub_category/products/product_screen.dart';
-
 import '../../../account_screen.dart';
 import '../../../search_screen.dart';
 
@@ -41,6 +40,9 @@ class _CakesProductsState extends State<CakesProducts> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+                            width: 316.rw,
+                            height: 130.rh,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100.rs),
@@ -54,6 +56,7 @@ class _CakesProductsState extends State<CakesProducts> {
                                 ),
                               ],
                             ),
+                            padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
                             child: IconButton(
                               onPressed: () => Navigator.pop(context),
                               icon: Row(
@@ -97,7 +100,7 @@ class _CakesProductsState extends State<CakesProducts> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SearchScreen(),
+                                        builder: (context) => SearchScreen(showBackButton: true),
                                       ),
                                     );
                                   },
@@ -223,25 +226,29 @@ Widget _buildCakes(Map<String, dynamic> cake, BuildContext context, ShortProvide
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
+            flex: 5,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(30.rs),
               child: Image.network(
                 cake['image'],
-                width: 450.rw,
-                height: 450.rh,
+                width: 440.rw,
+                height: 440.rh,
                 fit: BoxFit.cover
               ),
             ),
           ),
-          10.verticalSpace,
-          Text(
-            cake['title'],
-            style: TextStyle(
-              color: Color(0xFF283577),
-              fontSize: 40.rt,
-              fontWeight: FontWeight.w700,
+          20.verticalSpace,
+          Expanded(
+            child: Text(
+              cake['title'],
+              style: TextStyle(
+                color: Color(0xFF283577),
+                fontSize: 40.rt,
+                fontWeight: FontWeight.w700,
+                overflow: TextOverflow.ellipsis
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 20.rh),

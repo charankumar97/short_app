@@ -1,16 +1,11 @@
 import 'package:flexify/flexify.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:short_app/screens/search_screen.dart';
-import 'package:short_app/screens/store_location.dart';
 import 'package:short_app/screens/sub_category/accessories_screen.dart';
 import 'package:short_app/screens/sub_category/cup_cakes_screen.dart';
 import 'package:short_app/screens/sub_category/treats_screen.dart';
 import 'package:short_app/screens/sub_category/wedding_cakes_screen.dart';
 import 'package:short_app/screens/sub_category/cakes_screen.dart';
-import 'package:short_app/screens/home_screen.dart';
-
-import 'cart_screen.dart';
 
 class CategoryScreen extends StatefulWidget {
   const CategoryScreen({super.key});
@@ -20,7 +15,6 @@ class CategoryScreen extends StatefulWidget {
 }
 
 class _CategoryScreenState extends State<CategoryScreen> {
-  int _currentIndex = 1;
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -51,7 +45,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                           onTap: (){
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (_) => SearchScreen()),
+                              MaterialPageRoute(builder: (_) => SearchScreen(showBackButton: true)),
                             );
                           },
                           child: AbsorbPointer(
@@ -60,9 +54,9 @@ class _CategoryScreenState extends State<CategoryScreen> {
                                 border: InputBorder.none,
                                 hintText: 'Search Delicious Cakes',
                                 hintStyle: TextStyle(
-                                    color: Color(0xFF1E4489),
-                                    fontSize: 40.rt,
-                                    fontWeight: FontWeight.w400
+                                  color: Color(0xFF1E4489),
+                                  fontSize: 40.rt,
+                                  fontWeight: FontWeight.w400
                                 ),
                                 suffixIcon: Icon(
                                   Icons.search,
@@ -291,130 +285,130 @@ class _CategoryScreenState extends State<CategoryScreen> {
             ],
           ),
         ),
-        bottomNavigationBar: SafeArea(
-          child: Container(
-            decoration: BoxDecoration(
-              color: Color(0xFFFFFFFF),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  offset: Offset(0, -15),
-                  blurRadius: 40,
-                  spreadRadius: 0,
-                ),
-              ],
-            ),
-            child: BottomNavigationBar(
-              currentIndex: _currentIndex,
-              backgroundColor: Color(0xFFFFFFFF),
-              type: BottomNavigationBarType.fixed,
-              selectedItemColor: Color.fromRGBO(238, 41, 56, 0.8),
-              unselectedItemColor: Color.fromRGBO(0, 0, 0, 0.5),
-              selectedLabelStyle: TextStyle(
-                fontSize: 25.rt,
-                fontWeight: FontWeight.w800,
-                color: Color.fromRGBO(238, 41, 56, 0.8),
-              ),
-              unselectedLabelStyle: TextStyle(
-                fontSize: 25.rt,
-                fontWeight: FontWeight.w800,
-                color: Color.fromRGBO(0, 0, 0, 0.5),
-              ),
-              onTap: (index) {
-                setState(() {
-                  _currentIndex = index;
-                });
-                if (index == 0) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => HomeScreen(),
-                    ),
-                  );
-                }
-                if (index == 1) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CategoryScreen(),
-                    ),
-                  );
-                }
-                if (index == 2) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StoreLocation(),
-                    ),
-                  );
-                }
-                if (index == 3) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => CartScreen(),
-                    ),
-                  );
-                }
-                if (index == 4) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SearchScreen(),
-                    ),
-                  );
-                }
-              },
-              items: [
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/images/home.svg',
-                    width: 70.rw,
-                    height: 70.rh,
-                    colorFilter: ColorFilter.mode(_currentIndex == 0 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                  ),
-                  label: 'HOME',
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/images/cake.svg',
-                    width: 70.rw,
-                    height: 70.rh,
-                    colorFilter: ColorFilter.mode(_currentIndex == 1 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                  ),
-                  label: 'CAKES',
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/images/store.svg',
-                    width: 70.rw,
-                    height: 70.rh,
-                    colorFilter: ColorFilter.mode(_currentIndex == 2 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                  ),
-                  label: 'STORES',
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/images/basket.svg',
-                    width: 70.rw,
-                    height: 70.rh,
-                    colorFilter: ColorFilter.mode(_currentIndex == 3 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                  ),
-                  label: 'BASKET',
-                ),
-                BottomNavigationBarItem(
-                  icon: SvgPicture.asset(
-                    'assets/images/magnifier.svg',
-                    width: 70.rw,
-                    height: 70.rh,
-                    colorFilter: ColorFilter.mode(_currentIndex == 4 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                  ),
-                  label: 'SEARCH',
-                ),
-              ],
-            ),
-          ),
-        ),
+        // bottomNavigationBar: SafeArea(
+        //   child: Container(
+        //     decoration: BoxDecoration(
+        //       color: Color(0xFFFFFFFF),
+        //       boxShadow: [
+        //         BoxShadow(
+        //           color: Colors.black.withOpacity(0.1),
+        //           offset: Offset(0, -15),
+        //           blurRadius: 40,
+        //           spreadRadius: 0,
+        //         ),
+        //       ],
+        //     ),
+        //     child: BottomNavigationBar(
+        //       currentIndex: _currentIndex,
+        //       backgroundColor: Color(0xFFFFFFFF),
+        //       type: BottomNavigationBarType.fixed,
+        //       selectedItemColor: Color.fromRGBO(238, 41, 56, 0.8),
+        //       unselectedItemColor: Color.fromRGBO(0, 0, 0, 0.5),
+        //       selectedLabelStyle: TextStyle(
+        //         fontSize: 25.rt,
+        //         fontWeight: FontWeight.w800,
+        //         color: Color.fromRGBO(238, 41, 56, 0.8),
+        //       ),
+        //       unselectedLabelStyle: TextStyle(
+        //         fontSize: 25.rt,
+        //         fontWeight: FontWeight.w800,
+        //         color: Color.fromRGBO(0, 0, 0, 0.5),
+        //       ),
+        //       onTap: (index) {
+        //         setState(() {
+        //           _currentIndex = index;
+        //         });
+        //         if (index == 0) {
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => HomeScreen(),
+        //             ),
+        //           );
+        //         }
+        //         if (index == 1) {
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => CategoryScreen(),
+        //             ),
+        //           );
+        //         }
+        //         if (index == 2) {
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => StoreLocation(),
+        //             ),
+        //           );
+        //         }
+        //         if (index == 3) {
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => CartScreen(),
+        //             ),
+        //           );
+        //         }
+        //         if (index == 4) {
+        //           Navigator.push(
+        //             context,
+        //             MaterialPageRoute(
+        //               builder: (context) => SearchScreen(),
+        //             ),
+        //           );
+        //         }
+        //       },
+        //       items: [
+        //         BottomNavigationBarItem(
+        //           icon: SvgPicture.asset(
+        //             'assets/images/home.svg',
+        //             width: 70.rw,
+        //             height: 70.rh,
+        //             colorFilter: ColorFilter.mode(_currentIndex == 0 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
+        //           ),
+        //           label: 'HOME',
+        //         ),
+        //         BottomNavigationBarItem(
+        //           icon: SvgPicture.asset(
+        //             'assets/images/cake.svg',
+        //             width: 70.rw,
+        //             height: 70.rh,
+        //             colorFilter: ColorFilter.mode(_currentIndex == 1 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
+        //           ),
+        //           label: 'CAKES',
+        //         ),
+        //         BottomNavigationBarItem(
+        //           icon: SvgPicture.asset(
+        //             'assets/images/store.svg',
+        //             width: 70.rw,
+        //             height: 70.rh,
+        //             colorFilter: ColorFilter.mode(_currentIndex == 2 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
+        //           ),
+        //           label: 'STORES',
+        //         ),
+        //         BottomNavigationBarItem(
+        //           icon: SvgPicture.asset(
+        //             'assets/images/basket.svg',
+        //             width: 70.rw,
+        //             height: 70.rh,
+        //             colorFilter: ColorFilter.mode(_currentIndex == 3 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
+        //           ),
+        //           label: 'BASKET',
+        //         ),
+        //         BottomNavigationBarItem(
+        //           icon: SvgPicture.asset(
+        //             'assets/images/magnifier.svg',
+        //             width: 70.rw,
+        //             height: 70.rh,
+        //             colorFilter: ColorFilter.mode(_currentIndex == 4 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
+        //           ),
+        //           label: 'SEARCH',
+        //         ),
+        //       ],
+        //     ),
+        //   ),
+        // ),
       )
     );
   }

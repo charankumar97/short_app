@@ -5,12 +5,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:short_app/provider/short_provider.dart';
 import 'package:short_app/screens/account_screen.dart';
+import 'package:short_app/screens/contactus_screen.dart';
 import 'package:short_app/screens/search_screen.dart';
-import 'package:short_app/screens/store_location.dart';
 import 'package:short_app/screens/sub_category/sup_sub_category/products/cakes_products.dart';
 import 'package:short_app/screens/sub_category/sup_sub_category/products/product_screen.dart';
-import 'cart_screen.dart';
-import 'category_screen.dart';
+import 'franchise_enquiry.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -21,7 +20,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int _index = 0;
-  int _currentIndex = 0;
 
   final List<String> imageList = ['assets/images/Floral_Cake.png'];
   String getFirstAndLastLetters(String input) {
@@ -108,28 +106,28 @@ class _HomeScreenState extends State<HomeScreen> {
                                   onTap: (){
                                     Navigator.push(
                                       context,
-                                      MaterialPageRoute(builder: (_) => SearchScreen()),
+                                      MaterialPageRoute(builder: (_) => SearchScreen(showBackButton: true)),
                                     );
                                   },
                                   child: AbsorbPointer(
                                     child: TextField(
                                       decoration: InputDecoration(
+                                        contentPadding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 20.rh),
                                         hintText: 'Search delicious cakes',
                                         hintStyle: TextStyle(
                                           color: Colors.white.withOpacity(0.5),
                                           fontSize: 40.rt,
                                           fontWeight: FontWeight.w500,
                                         ),
-                                        prefixIcon: Icon(
+                                        suffixIcon: Icon(
                                           Icons.search,
-                                          color: Colors.white.withOpacity(0.5),
+                                          color: Color(0xFFDC2328),
                                         ),
-                                        filled: true,
                                         fillColor: Colors.transparent,
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(60.rs),
                                           borderSide: BorderSide(
-                                            width: 3,
+                                            width: 1,
                                             color: Colors.white.withOpacity(0.2),
                                           ),
                                         ),
@@ -409,7 +407,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       GestureDetector(
-                                        onTap: (){},
+                                        onTap: (){
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (_) => FranchiseEnquiry(),
+                                            ),
+                                          );
+                                        },
                                         child: Container(
                                           decoration: BoxDecoration(
                                             borderRadius: BorderRadius.circular(20.rs),
@@ -460,11 +465,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 location.isEmpty
                                 ? SizedBox.shrink()
                                 : Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 15.rw),
+                                  padding: EdgeInsets.symmetric(horizontal: 10.rw),
                                   child: SizedBox(
                                     height: 430.rh,
                                     child: ListView.builder(
-                                      padding: EdgeInsets.symmetric(horizontal: 15.rw),
+                                      // padding: EdgeInsets.symmetric(horizontal: 15.rw),
                                       scrollDirection: Axis.horizontal,
                                       itemCount: location.length,
                                       itemBuilder: (context, index) {
@@ -537,7 +542,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                     ),
                                     50.verticalSpace,
                                     GestureDetector(
-                                      onTap: (){},
+                                      onTap: (){
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (_) => ContactusScreen(),
+                                          ),
+                                        );
+                                      },
                                       child: Container(
                                         decoration: BoxDecoration(
                                           borderRadius: BorderRadius.circular(20.rs),
@@ -562,7 +574,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     Stack(
                                       alignment: Alignment.centerLeft,
                                       children: [
-                                        // Circular background
                                         Container(
                                           width: 388.rw,
                                           height: 287.rh,
@@ -592,130 +603,6 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   )
                 ],
-              ),
-            ),
-            bottomNavigationBar: SafeArea(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Color(0xFFFFFFFF),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      offset: Offset(0, -15),
-                      blurRadius: 40,
-                      spreadRadius: 0,
-                    ),
-                  ],
-                ),
-                child: BottomNavigationBar(
-                  currentIndex: _currentIndex,
-                  backgroundColor: Color(0xFFFFFFFF),
-                  type: BottomNavigationBarType.fixed,
-                  selectedItemColor: Color.fromRGBO(238, 41, 56, 0.8),
-                  unselectedItemColor: Color.fromRGBO(0, 0, 0, 0.5),
-                  selectedLabelStyle: TextStyle(
-                    fontSize: 25.rt,
-                    fontWeight: FontWeight.w800,
-                    color: Color.fromRGBO(238, 41, 56, 0.8),
-                  ),
-                  unselectedLabelStyle: TextStyle(
-                    fontSize: 25.rt,
-                    fontWeight: FontWeight.w800,
-                    color: Color.fromRGBO(0, 0, 0, 0.5),
-                  ),
-                  onTap: (index) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                    if (index == 0) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomeScreen(),
-                        ),
-                      );
-                    }
-                    if (index == 1) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CategoryScreen(),
-                        ),
-                      );
-                    }
-                    if (index == 2) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => StoreLocation(),
-                        ),
-                      );
-                    }
-                    if (index == 3) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => CartScreen(),
-                        ),
-                      );
-                    }
-                    if (index == 4) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SearchScreen(),
-                        ),
-                      );
-                    }
-                  },
-                  items: [
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        'assets/images/home.svg',
-                        width: 70.rw,
-                        height: 70.rh,
-                        colorFilter: ColorFilter.mode(_currentIndex == 0 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                      ),
-                      label: 'HOME',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        'assets/images/cake.svg',
-                        width: 70.rw,
-                        height: 70.rh,
-                        colorFilter: ColorFilter.mode(_currentIndex == 1 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                      ),
-                      label: 'CAKES',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        'assets/images/store.svg',
-                        width: 70.rw,
-                        height: 70.rh,
-                        colorFilter: ColorFilter.mode(_currentIndex == 2 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                      ),
-                      label: 'STORES',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        'assets/images/basket.svg',
-                        width: 70.rw,
-                        height: 70.rh,
-                        colorFilter: ColorFilter.mode(_currentIndex == 3 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                      ),
-                      label: 'BASKET',
-                    ),
-                    BottomNavigationBarItem(
-                      icon: SvgPicture.asset(
-                        'assets/images/magnifier.svg',
-                        width: 70.rw,
-                        height: 70.rh,
-                        colorFilter: ColorFilter.mode(_currentIndex == 4 ? Color.fromRGBO(238, 41, 56, 0.8):Color.fromRGBO(0, 0, 0, 0.5),BlendMode.srcIn),
-                      ),
-                      label: 'SEARCH',
-                    ),
-                  ],
-                ),
               ),
             ),
           ),
@@ -822,7 +709,7 @@ Widget _buildItem(Map<String, dynamic> bestSeller, ShortProvider provider, Build
 
 Widget _buildLocation(Map<String, dynamic> location, BuildContext context){
   return Container(
-    width: 400.rw,
+    width: 375.rw,
     decoration: BoxDecoration(
       color: Color(0xFFFFFFFF),
       borderRadius: BorderRadius.circular(30.rs),
@@ -832,9 +719,9 @@ Widget _buildLocation(Map<String, dynamic> location, BuildContext context){
       ),
     ),
     child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 30.rh),
+      padding: EdgeInsets.symmetric(horizontal: 20.rw, vertical: 20.rh),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(30.rs),

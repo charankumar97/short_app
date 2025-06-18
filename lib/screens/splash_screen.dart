@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:short_app/provider/short_provider.dart';
-import 'package:short_app/screens/landing_screen.dart';
-
-import 'home_screen.dart';
+import 'package:short_app/screens/delayed_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -13,19 +9,22 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    Future.delayed(Duration(seconds: 3), (){
-      final provider = Provider.of<ShortProvider>(context, listen: false);
-      final bool loggedIn = provider.isLoggedIn();
+    Future.delayed(Duration(seconds: 1), () {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => loggedIn ? const HomeScreen() : const LandingScreen(),
+            builder: (_) => DelayedScreen()
         ),
       );
     });
-
+    // WidgetsBinding.instance.addPostFrameCallback((_) async {
+    //   final provider = Provider.of<ShortProvider>(context, listen: false);
+    //   final bool loggedIn = provider.isLoggedIn();
+    //
+    // });
   }
 
   @override

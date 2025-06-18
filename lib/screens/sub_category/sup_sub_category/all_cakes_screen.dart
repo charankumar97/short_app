@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:short_app/screens/sub_category/sup_sub_category/products/cakes_products.dart';
-
 import '../../../provider/short_provider.dart';
 import '../../account_screen.dart';
 import '../../search_screen.dart';
@@ -41,6 +40,9 @@ class _AllCakesScreenState extends State<AllCakesScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+                            width: 316.rw,
+                            height: 130.rh,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100.rs),
@@ -54,6 +56,7 @@ class _AllCakesScreenState extends State<AllCakesScreen> {
                                 ),
                               ],
                             ),
+                            padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
                             child: IconButton(
                               onPressed: () => Navigator.pop(context),
                               icon: Row(
@@ -97,7 +100,7 @@ class _AllCakesScreenState extends State<AllCakesScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SearchScreen(),
+                                        builder: (context) => SearchScreen(showBackButton: true),
                                       ),
                                     );
                                   },
@@ -144,20 +147,20 @@ class _AllCakesScreenState extends State<AllCakesScreen> {
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.symmetric( vertical: 30.rh),
-                        child: Center(
-                          child: Text(
-                            widget.title,
-                            style: TextStyle(
-                              color: Color(0xFF283577),
-                              fontSize: 67.rt,
-                              fontWeight: FontWeight.w700,
-                            ),
+                      padding: EdgeInsets.symmetric( vertical: 30.rh),
+                      child: Center(
+                        child: Text(
+                          widget.title,
+                          style: TextStyle(
+                            color: Color(0xFF283577),
+                            fontSize: 67.rt,
+                            fontWeight: FontWeight.w700,
                           ),
-                        )
+                        ),
+                      )
                     ),
                     Padding(
-                      padding: EdgeInsets.symmetric(vertical: 80.rh),
+                      padding: EdgeInsets.symmetric(vertical: 50.rh),
                         child: GridView.builder(
                           shrinkWrap: true,
                           padding: EdgeInsets.symmetric(horizontal: 30.rw),
@@ -195,53 +198,54 @@ Widget _buildCakes(subCategory, BuildContext context, ShortProvider provider,){
         width: 1,
       ),
     ),
-    padding: EdgeInsets.symmetric(horizontal: 15.rw, vertical: 15.rh),
+    padding: EdgeInsets.symmetric(horizontal: 10.rw, vertical: 15.rh),
     child: Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Expanded(
-          child: GestureDetector(
-            onTap: () async {
-              final int? categoryId = subCategory['category_id'];
-              print(categoryId);
+        GestureDetector(
+          onTap: () async {
+            final int? categoryId = subCategory['category_id'];
+            print(categoryId);
 
-              if (categoryId != null) {
-                provider.fetchCategoryProducts(categoryId, context);
+            if (categoryId != null) {
+              provider.fetchCategoryProducts(categoryId, context);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => CakesProducts(
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => CakesProducts(
                       title: subCategory['title']
-                    ),
                   ),
-                );
-              } else {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Invalid category ID')),
-                );
-              }
-            },
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20.rs),
-              child: Image.asset(
-                  'assets/images/category(1).png',
-                  width: 428.rw,
-                  height: 426.rh,
-                  fit: BoxFit.contain
-              ),
+                ),
+              );
+            } else {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Invalid category ID')),
+              );
+            }
+          },
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(200.rs),
+            child: Image.asset(
+              'assets/images/cake-image.png',
+              width: 196.rw,
+              height: 186.rh,
+              fit: BoxFit.cover
             ),
           ),
         ),
         10.verticalSpace,
-        Text(
-         subCategory['title'],
-          style: TextStyle(
-            color: Colors.red,
-            fontSize: 40.rt,
-            fontWeight: FontWeight.w700,
+        Expanded(
+          child: Text(
+            subCategory['title'],
+            style: TextStyle(
+              color: Color(0xFF1E4489),
+              fontSize: 40.rt,
+              fontWeight: FontWeight.w700,
+              overflow: TextOverflow.ellipsis
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     ),

@@ -2,6 +2,7 @@ import 'package:flexify/flexify.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:short_app/screens/sub_category/sup_sub_category/wedding_cake_enquiry.dart';
 import '../../provider/short_provider.dart';
 import '../account_screen.dart';
 import '../search_screen.dart';
@@ -38,6 +39,9 @@ class _WeddingCakesScreenState extends State<WeddingCakesScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+                            width: 316.rw,
+                            height: 130.rh,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100.rs),
@@ -51,6 +55,7 @@ class _WeddingCakesScreenState extends State<WeddingCakesScreen> {
                                 ),
                               ],
                             ),
+                            padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
                             child: IconButton(
                               onPressed: () => Navigator.pop(context),
                               icon: Row(
@@ -94,7 +99,7 @@ class _WeddingCakesScreenState extends State<WeddingCakesScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SearchScreen(),
+                                        builder: (context) => SearchScreen(showBackButton: true),
                                       ),
                                     );
                                   },
@@ -141,36 +146,36 @@ class _WeddingCakesScreenState extends State<WeddingCakesScreen> {
                       ),
                     ),
                     Padding(
-                        padding: EdgeInsets.symmetric(vertical: 50.rh),
-                        child: Center(
-                          child: Text(
-                            'Wedding Cakes',
-                            style: TextStyle(
-                              color: Color(0xFF283577),
-                              fontSize: 67.rt,
-                              fontWeight: FontWeight.w700,
-                            ),
+                      padding: EdgeInsets.symmetric(vertical: 50.rh),
+                      child: Center(
+                        child: Text(
+                          'Wedding Cakes',
+                          style: TextStyle(
+                            color: Color(0xFF283577),
+                            fontSize: 67.rt,
+                            fontWeight: FontWeight.w700,
                           ),
-                        )
+                        ),
+                      ),
                     ),
                     Padding(
-                        padding: EdgeInsets.symmetric(vertical: 50.rh),
-                        child: GridView.builder(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.symmetric(horizontal: 30.rw),
-                          physics: NeverScrollableScrollPhysics(),
-                          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 10,
-                            crossAxisSpacing: 5,
-                            childAspectRatio: 0.8,
-                          ),
-                          itemCount: cake.length,
-                          itemBuilder: (context,index){
-                            return _buildCakes(cake[index], context);
-                          },
-                        )
-                    )
+                      padding: EdgeInsets.symmetric(vertical: 50.rh),
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        padding: EdgeInsets.symmetric(horizontal: 30.rw),
+                        physics: NeverScrollableScrollPhysics(),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: 10,
+                          crossAxisSpacing: 5,
+                          childAspectRatio: 0.8,
+                        ),
+                        itemCount: cake.length,
+                        itemBuilder: (context,index){
+                          return _buildCakes(cake[index], context, provider);
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -182,94 +187,107 @@ class _WeddingCakesScreenState extends State<WeddingCakesScreen> {
   }
 }
 
-Widget _buildCakes(Map<String, dynamic> cake, BuildContext context){
+Widget _buildCakes(Map<String, dynamic> cake, BuildContext context, ShortProvider provider){
   return Container(
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: Color(0xFFFFEBEB),
       borderRadius: BorderRadius.circular(20.rs),
       border: Border.all(
         color: const Color(0xFFFF2676),
-        width: 1,
+        width: 0.5,
       ),
     ),
     padding: EdgeInsets.symmetric(horizontal: 15.rw, vertical: 10.rh),
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.rs),
-                topRight: Radius.circular(20.rs),
-              ),
-              child: Center(
-                child: Image.network(
-                  cake['image'],
-                  width: 428.rw,
-                  height: 350.rh,
-                  fit: BoxFit.contain,
+    child: GestureDetector(
+      onTap: (){
+        final int id = cake['id'];
+        provider.fetchDescription(id);
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => WeddingCakeEnquiry(cake : cake)
+          ),
+        );
+      },
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Stack(
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.rs),
+                  topRight: Radius.circular(20.rs),
                 ),
-              ),
-            ),
-            Positioned(
-              top: 5.rh,
-              left: 5.rw,
-              child: Container(
-                padding: EdgeInsets.symmetric(horizontal: 20.rw, vertical: 10.rh),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(12.rs),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 4,
-                      offset: Offset(0, 2),
-                    )
-                  ],
-                ),
-                child: RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: 'FROM\n',
-                        style: TextStyle(
-                          fontSize: 30.rt,
-                          fontWeight: FontWeight.w500,
-                          color: Color(0xFF8C8C8C),
-                        ),
-                      ),
-                      TextSpan(
-                        text: '£${cake['final_price']}',
-                        style: TextStyle(
-                          fontSize: 40.rt,
-                          fontWeight: FontWeight.w700,
-                          color: Color(0xFFEE2938),
-                        ),
-                      ),
-                    ],
+                child: Center(
+                  child: Image.network(
+                    cake['image'],
+                    width: 428.rw,
+                    height: 428.rh,
+                    fit: BoxFit.cover,
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-        10.verticalSpace,
-        Padding(
-          padding: EdgeInsets.symmetric(vertical: 10.rh),
-          child: Center(
-            child: Text(
-              cake['title'],
-              style: TextStyle(
-                color: Color(0xFF283577),
-                fontSize: 36.rt,
-                fontWeight: FontWeight.w700,
+              Positioned(
+                top: 5.rh,
+                left: 5.rw,
+                child: Container(
+                  padding: EdgeInsets.symmetric(horizontal: 20.rw, vertical: 10.rh),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12.rs),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black12,
+                        blurRadius: 4,
+                        offset: Offset(0, 2),
+                      )
+                    ],
+                  ),
+                  child: RichText(
+                    text: TextSpan(
+                      children: [
+                        TextSpan(
+                          text: 'FROM\n',
+                          style: TextStyle(
+                            fontSize: 30.rt,
+                            fontWeight: FontWeight.w500,
+                            color: Color(0xFF8C8C8C),
+                          ),
+                        ),
+                        TextSpan(
+                          text: '£${cake['final_price']}',
+                          style: TextStyle(
+                            fontSize: 40.rt,
+                            fontWeight: FontWeight.w700,
+                            color: Color(0xFFEE2938),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-              textAlign: TextAlign.center,
+            ],
+          ),
+          10.verticalSpace,
+          Padding(
+            padding: EdgeInsets.symmetric(vertical: 10.rh),
+            child: Center(
+              child: Text(
+                cake['title'],
+                style: TextStyle(
+                  color: Color(0xFF283577),
+                  fontSize: 36.rt,
+                  fontWeight: FontWeight.w700,
+                  overflow: TextOverflow.ellipsis
+                ),
+                textAlign: TextAlign.center,
+              ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

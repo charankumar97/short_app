@@ -88,6 +88,7 @@ flutter:
     - assets/images/Group 615.svg
     - assets/images/Group 620.svg
     - assets/images/Group 665.svg
+    - assets/images/Group 762.svg
     - assets/images/Group 347(1).svg
     - assets/images/Arrow 3.svg
     - assets/images/date-range.svg
@@ -95,14 +96,20 @@ flutter:
     - assets/images/Group 655.svg
     - assets/images/Gmail Logo.png
     - assets/images/Password.png
+    - assets/images/cake-image.png
     - assets/images/show.png
     - assets/images/invisible.png
     - assets/images/Floral_Cake.png
     - assets/images/Group 684.svg
     - assets/images/Group 684(1).svg
+    - assets/images/Group 351.svg
+    - assets/images/check.svg
     - assets/images/Vector.svg
+    - assets/images/share.svg
     - assets/images/image.jpg
     - assets/images/image.png
+    - assets/images/contact-img1.png
+    - assets/images/contact-img2.png
     - assets/images/category.png
     - assets/images/franchises.png
     - assets/images/home.svg
@@ -113,6 +120,11 @@ flutter:
     - assets/images/store1.svg
     - assets/images/call.svg
     - assets/images/mail.svg
+    - assets/images/facebook.svg
+    - assets/images/instagram.svg
+    - assets/images/twitter.svg
+    - assets/images/whatsapp.svg
+    - assets/images/party-popper.svg
     - assets/images/category-cake.png
     - assets/images/category(1).png
     - assets/images/category(2).png

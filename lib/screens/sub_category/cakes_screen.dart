@@ -40,6 +40,9 @@ class _CakesScreenState extends State<CakesScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+                            width: 316.rw,
+                            height: 130.rh,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100.rs),
@@ -53,6 +56,7 @@ class _CakesScreenState extends State<CakesScreen> {
                                 ),
                               ],
                             ),
+                            padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
                             child: IconButton(
                               onPressed: () => Navigator.pop(context),
                               icon: Row(
@@ -96,7 +100,7 @@ class _CakesScreenState extends State<CakesScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SearchScreen(),
+                                        builder: (context) => SearchScreen(showBackButton: true),
                                       ),
                                     );
                                   },
@@ -226,7 +230,7 @@ Widget _buildCakes(Map<String, dynamic> cake, BuildContext context){
         Text(
           cake['title'],
           style: TextStyle(
-            color: Colors.red,
+            color: Color(0xFF283577),
             fontSize: 40.rt,
             fontWeight: FontWeight.w700,
           ),

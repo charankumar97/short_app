@@ -238,11 +238,17 @@ class _AddressScreenState extends State<AddressScreen> {
                                 child: TextField(
                                   controller: _firstController,
                                   decoration: InputDecoration(
-                                    hintText: 'FIRST NAME',
-                                    hintStyle: TextStyle(
+                                    labelText: 'FIRST NAME',
+                                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                    labelStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 26.rt,
                                       color: Color(0xFF8B8B8B),
+                                    ),
+                                    floatingLabelStyle: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 24.rt,
+                                      color: Color(0xFF007AFF),
                                     ),
                                     contentPadding: EdgeInsets.symmetric(horizontal: 12.rw, vertical: 10.rh),
                                     border: OutlineInputBorder(
@@ -272,12 +278,18 @@ class _AddressScreenState extends State<AddressScreen> {
                                 padding: EdgeInsets.symmetric(horizontal: 5.rw, vertical: 5.rh),
                                 child: TextField(
                                   controller: _lastController,
-                                    decoration: InputDecoration(
-                                    hintText: 'LAST NAME',
-                                    hintStyle: TextStyle(
+                                  decoration: InputDecoration(
+                                    labelText: 'LAST NAME',
+                                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                    labelStyle: TextStyle(
                                       fontWeight: FontWeight.w400,
                                       fontSize: 26.rt,
                                       color: Color(0xFF8B8B8B),
+                                    ),
+                                    floatingLabelStyle: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 24.rt,
+                                      color: Color(0xFF007AFF),
                                     ),
                                     contentPadding: EdgeInsets.symmetric(horizontal: 12.rw, vertical: 10.rh),
                                     border: OutlineInputBorder(

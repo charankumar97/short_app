@@ -5,6 +5,7 @@ import 'package:hive_flutter/adapters.dart';
 import 'package:http/http.dart' as http;
 import 'package:short_app/models/person_model.dart';
 import '../models/product_model.dart';
+import '../screens/login_screen.dart';
 
 class ShortProvider extends ChangeNotifier{
   bool _isLoading = false;
@@ -91,6 +92,18 @@ class ShortProvider extends ChangeNotifier{
   List<Map<String, dynamic>> _orders = [];
   List<Map<String, dynamic>> get orders => _orders;
 
+  List<Map<String, dynamic>> _allCoupons = [];
+  List<Map<String, dynamic>> get allCoupons => _allCoupons;
+
+  Map<String, dynamic> _selectedCoupon = {};
+  Map<String, dynamic> get selectedCoupon => _selectedCoupon;
+
+  Map<String, dynamic> _selectedStoreTitle = {};
+  Map<String, dynamic> get selectedStoreTitle => _selectedStoreTitle;
+
+  Map<int, List<Map<String, dynamic>>> _categoryProducts = {};
+  Map<int, List<Map<String, dynamic>>> get allCategoryProducts => _categoryProducts;
+
   int? _selectedCategoryId ;
   int? get selectedCategoryId => _selectedCategoryId;
 
@@ -109,11 +122,30 @@ class ShortProvider extends ChangeNotifier{
   String _message = '';
   String get message => _message;
 
+  String _firstName = '';
+  String get firstName => _firstName;
+  String _lastName = '';
+  String get lastName => _lastName;
+  String _email = '';
+  String get email => _email;
+  String _mobile = '';
+  String get mobile => _mobile;
+
   String _date = '';
   String get date => _date;
   String _time = '';
   String get time => _time;
+  int _selectedSizeId = 0;
+  int get selectedSizeId => _selectedSizeId;
+  int _selectedSpongeId = 0;
+  int get selectedSpongeId => _selectedSpongeId;
+  int _selectedFillingId = 0;
+  int get selectedFillingId => _selectedFillingId;
+  int _selectedProductId = 0;
+  int get selectedProductId => _selectedProductId;
 
+  double _sellPrice = 0;
+  double get sellPrice =>_sellPrice;
 
   late Box<Person> _personBox;
 
@@ -129,21 +161,22 @@ class ShortProvider extends ChangeNotifier{
     await Hive.initFlutter();
     _personBox = await Hive.openBox<Person>('person');
     _loadDetails();
-    await fetchBestSellers();
-    await fetchStoresLocation();
-    await fetchCakes();
-    await fetchCupCakes();
-    await fetchWeddingCakes();
-    await fetchTreats();
-    await fetchTimeSlots();
-    await fetchCategoryProducts(192, context);
-    await fetchProducts(184, context);
-    await fetchCakeSizes(2566);
-    await fetchSponges(2566);
-    await fetchFilling(2566);
-    await fetchDescription(2566);
-    await fetchDelivery("3");
-    await fetchShowAddress(1621);
+    fetchBestSellers();
+    fetchStoresLocation();
+    fetchCakes();
+    fetchCupCakes();
+    fetchWeddingCakes();
+    fetchTreats();
+    fetchTimeSlots();
+    fetchCategoryProducts(192, context);
+    fetchProducts(153, context);
+    fetchCakeSizes(2566);
+    fetchSponges(2566);
+    fetchFilling(2566);
+    fetchDescription(2566);
+    fetchDelivery("3");
+    fetchShowAddress(1621);
+    fetchAllCoupons();
   }
 
   Future<void> fetchBestSellers() async {
@@ -182,20 +215,31 @@ class ShortProvider extends ChangeNotifier{
   }
 
   Future<void> fetchSearchSuggestions(String postcode, BuildContext context) async{
-    final url = Uri.parse('https://www.staging.cakesandbakes.net/api/search-postcode?postcode=rm52nl');
-    final response = await http.get(url);
-    if(response.statusCode == 200){
-      final data = jsonDecode(response.body);
-      _text = data['message']??'';
-      _collection = (data['collection']).cast<Map<String, dynamic>>();
-    }else{
-      print('Failed to load stores');
+    final List<String> skus = cartProducts.map((e) => e.sku).toList();
+    final payload = {
+      "skus": skus,
+    };
+    print(payload);
+    try {
+      final response = await http.post(Uri.parse('https://www.staging.cakesandbakes.net/api/search-postcode?postcode=rm52nl'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(payload),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        _text = data['message'] ?? '';
+        _collection = (data['collection'] ?? []).cast<Map<String, dynamic>>();
+      } else {
+        print('Failed to load stores. Status code: ${response.statusCode}');
+      }
+      notifyListeners();
+    } catch (e) {
+      print('Error: $e');
     }
-    notifyListeners();
   }
 
   Future<void> fetchSearchProducts(String query, BuildContext context) async{
-    final url = Uri.parse('https://www.staging.cakesandbakes.net/api/search?query=${query}');
+    final url = Uri.parse('https://www.staging.cakesandbakes.net/api/search?query=$query');
     final response = await http.get(url);
     if(response.statusCode == 200){
       final data = jsonDecode(response.body)['products'];
@@ -255,22 +299,10 @@ class ShortProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  // Future<void> fetchAccessories() async {
-  //   final url = Uri.parse('https://www.staging.cakesandbakes.net/api/products/184');
-  //   final response = await http.get(url);
-  //   if(response.statusCode == 200){
-  //     final data = jsonDecode(response.body)['products'];
-  //     _accessories = data.cast<Map<String, dynamic>>();
-  //   }else{
-  //     print('Failed to load sub-category');
-  //   }
-  //   notifyListeners();
-  // }
   Future<void> fetchDelivery(String zoneId) async {
     final url = Uri.parse('https://www.staging.cakesandbakes.net/api/delivery-prices');
     try {
       final response = await http.get(url);
-
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body)['data'];
         _delivery = (json[zoneId]['Normal Day']).cast<Map<String, dynamic>>();
@@ -282,7 +314,6 @@ class ShortProvider extends ChangeNotifier{
       _delivery = [];
       print('Error fetching delivery prices: $e');
     }
-
     notifyListeners();
   }
 
@@ -337,6 +368,24 @@ class ShortProvider extends ChangeNotifier{
     }
     notifyListeners();
   }
+
+
+  Future<void> fetchProduct(int categoryId) async {
+    final url = Uri.parse('https://www.staging.cakesandbakes.net/api/products/$categoryId');
+    try {
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body)['products'];
+        _categoryProducts[categoryId] = data.cast<Map<String, dynamic>>();
+        notifyListeners();
+      } else {
+        print('Failed to load products: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error fetching products: $e');
+    }
+  }
+
 
   Future<void> fetchCakeSizes(int id) async{
     final url = Uri.parse('https://www.staging.cakesandbakes.net/api/cakesizes/$id');
@@ -425,6 +474,55 @@ class ShortProvider extends ChangeNotifier{
     notifyListeners();
   }
 
+  Future<void> fetchProductPrice() async{
+    final payload = {
+      "channel_product_id": _selectedProductId,
+      "size_id": _selectedSizeId,
+      "sponge_id": _selectedSpongeId,
+      "filling_id": _selectedFillingId
+    };
+    print(payload);
+    try {
+      final response = await http.post(Uri.parse('https://www.staging.cakesandbakes.net/api/get-product-price'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(payload),
+      );
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        print(data);
+        _sellPrice = data['sell_price'];
+        print(sellPrice);
+      } else {
+        print('Failed to load product-price. Status code: ${response.statusCode}');
+      }
+      notifyListeners();
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
+  Future<void> fetchAllCoupons() async{
+    final url = Uri.parse('https://www.staging.cakesandbakes.net/api/coupons');
+    final response = await http.get(url);
+    if(response.statusCode == 200){
+      final data = json.decode(response.body);
+      _allCoupons = data.cast<Map<String, dynamic>>();
+    }
+    else{
+      print('Failed to load Coupons');
+    }
+    notifyListeners();
+  }
+  void selectCoupon(Map<String, dynamic> coupon) {
+    _selectedCoupon = coupon;
+    notifyListeners();
+  }
+
+  void clearCoupon() {
+    _selectedCoupon = {};
+    notifyListeners();
+  }
+
   bool isCakeProduct(Product product) {
     final title = product.title.toLowerCase();
     return title.contains('cake') || title.contains('cupcake');
@@ -439,11 +537,11 @@ class ShortProvider extends ChangeNotifier{
       _cartProducts[index].qty += product.qty;
 
       _cartProducts[index].total = isCake
-          ? _cartProducts[index].qty * (_cartProducts[index].finalPrice)
+          ? _cartProducts[index].qty * _cartProducts[index].finalPrice
           : _cartProducts[index].qty * _cartProducts[index].finalPrice;
     } else {
       product.total = isCake
-          ? (product.finalPrice ) * product.qty
+          ? product.finalPrice * product.qty
           : product.finalPrice * product.qty;
 
       _cartProducts.add(product);
@@ -497,6 +595,13 @@ class ShortProvider extends ChangeNotifier{
     _message = message;
     notifyListeners();
   }
+  void selectedItemId(int sizeId, int spongeId, int fillingId, int productId){
+    _selectedSizeId = sizeId;
+    _selectedSpongeId = spongeId;
+    _selectedFillingId = fillingId;
+    _selectedProductId = productId;
+    notifyListeners();
+  }
   void selectedProduct(Map<String, dynamic> product) {
     product['qty'] = 1;
     _selectProduct = Map<String, dynamic>.from(product);
@@ -523,6 +628,19 @@ class ShortProvider extends ChangeNotifier{
 
   void selectedAddress(Map<String, dynamic> address) {
     _address = [address];
+    notifyListeners();
+  }
+
+  void prerson(String firstName ,String lastName ,String email ,String mobile){
+    _firstName = firstName;
+    _lastName = lastName;
+    _email = email;
+    _mobile = mobile;
+    notifyListeners();
+  }
+
+  void selectStore(Map<String, dynamic> store){
+    _selectedStoreTitle = store;
     notifyListeners();
   }
 
@@ -573,7 +691,7 @@ class ShortProvider extends ChangeNotifier{
     return (basePrice + selectSizePrice) * qty;
   }
 
-  double get totalAmount => _cartProducts.fold(0, (sum, item) => sum + (item.finalPrice  * item.qty));
+  double get totalAmount => _cartProducts.fold(0, (sum, item) => sum + (item.finalPrice * item.qty));
 
   Future<void> registerUser(Person user, BuildContext context) async {
     try {
@@ -614,6 +732,30 @@ class ShortProvider extends ChangeNotifier{
       notifyListeners();
     }
   }
+  Future<void> updateUserDetails(Person user, BuildContext context) async{
+    await _personBox.clear();
+    _users.clear();
+    try{
+      await _personBox.add(user);
+      _users.add(user);
+    }catch(e){
+      print('Error adding user: $e');
+    }
+    notifyListeners();
+  }
+
+  Future<void> logOut(BuildContext context) async {
+    await _personBox.clear();
+    _users.clear();
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute(builder: (_) => LoginScreen()),
+    );
+    notifyListeners();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('User logged out')),
+    );
+  }
 
 
   void _loadDetails() {
@@ -621,7 +763,15 @@ class ShortProvider extends ChangeNotifier{
   }
 
   double get packagingFee => 0.00;
-  double get grandTotal => totalAmount + packagingFee;
+  double get discount {
+    if (selectedCoupon.isEmpty) return 0.0;
+
+    final value = selectedCoupon['discount'];
+    if (value is int) return value.toDouble();
+    if (value is double) return value;
+    return 0.0;
+  }
+  double get grandTotal => totalAmount + packagingFee - discount;
 
   bool isLoggedIn() => _users.isNotEmpty;
 

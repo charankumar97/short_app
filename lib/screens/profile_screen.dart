@@ -31,6 +31,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? oldPasswordError;
   String? confirmPasswordError;
   String? mobileError;
+  bool show = false;
+  bool show1 = false;
+  bool show2 = false;
 
 
   Future<void> updateDetails(ShortProvider provider, BuildContext context) async {
@@ -39,8 +42,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       lastError = null;
       emailError = null;
       mobileError = null;
-      passwordError = null;
-      confirmPasswordError = null;
 
       if (_firstController.text.isEmpty) {
         firstError = 'Please enter the first name';
@@ -81,9 +82,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
             firstName: user['first_name'],
             lastName: user['last_name'],
             email: user['email'],
-            mobile: "0${user['contact_number'].substring(3)}",
+            mobile: "${user['contact_number']}",
           );
-          provider.updateUser(details, context);
+          provider.updateUserDetails(details, context);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               content: Text('Details updated successfully!'),
@@ -169,7 +170,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   bool numberValidate(String mobile){
-    final mobileRegex = RegExp(r'^[0-9]{11}$');
+    final mobileRegex = RegExp(r'^[0-9]{10}$');
     return mobileRegex.hasMatch(mobile);
   }
 
@@ -276,39 +277,42 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         ),
-                        15.verticalSpace,
+                        50.verticalSpace,
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Expanded(
                               flex: 1,
                               child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 5.rw),
+                                padding: EdgeInsets.symmetric(horizontal: 5.rw, vertical: 5.rh),
                                 child: TextField(
                                   controller: _firstController,
                                   style: TextStyle(
-                                    fontSize: 40.rt,
+                                    fontSize: 38.rt,
                                     fontWeight: FontWeight.w500,
                                     color: Color(0xFF000000),
                                   ),
                                   decoration: InputDecoration(
-                                    hintText: 'First Name',
-                                    hintStyle: TextStyle(
-                                      fontSize: 40.rt,
+                                    labelText: 'First NAME',
+                                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 35.rt,
+                                      color: Color(0xFF8B8B8B),
+                                    ),
+                                    floatingLabelStyle: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.black,
+                                      fontSize: 35.rt,
+                                      color: Color(0xFF8D8D8D),
                                     ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                        width: 1,
-                                      ),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 12.rw),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.rs),
+                                      borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                                     ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                        width: 1,
-                                      ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.rs),
+                                      borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                                     ),
                                   ),
                                   onChanged: (value){
@@ -330,37 +334,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 child: TextField(
                                   controller: _lastController,
                                   style: TextStyle(
-                                    fontSize: 40.rt,
+                                    fontSize: 38.rt,
                                     fontWeight: FontWeight.w500,
                                     color: Colors.black,
                                   ),
                                   decoration: InputDecoration(
-                                    hintText: 'Last Name',
-                                    errorStyle: TextStyle(
-                                        color: Color(0xFFD41F36),
-                                        fontSize: 30.rt,
-                                        fontWeight: FontWeight.w500
+                                    labelText: 'Last NAME',
+                                    floatingLabelBehavior: FloatingLabelBehavior.auto,
+                                    labelStyle: TextStyle(
+                                      fontWeight: FontWeight.w400,
+                                      fontSize: 35.rt,
+                                      color: Color(0xFF8B8B8B),
                                     ),
-                                    contentPadding:
-                                    EdgeInsets.symmetric(
-                                      vertical: 30.rt,
-                                    ),
-                                    hintStyle: TextStyle(
-                                      fontSize: 40.rt,
+                                    floatingLabelStyle: TextStyle(
                                       fontWeight: FontWeight.w500,
-                                      color: Colors.black,
+                                      fontSize: 35.rt,
+                                      color: Color(0xFF8D8D8D),
                                     ),
-                                    enabledBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                        width: 1,
-                                      ),
+                                    contentPadding: EdgeInsets.symmetric(horizontal: 12.rw,),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.rs),
+                                      borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                                     ),
-                                    focusedBorder: UnderlineInputBorder(
-                                      borderSide: BorderSide(
-                                        color: Colors.black,
-                                        width: 1,
-                                      ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(12.rs),
+                                      borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                                     ),
                                   ),
                                   onChanged: (value){
@@ -374,32 +372,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         ),
-                        15.verticalSpace,
+                        25.verticalSpace,
                         TextField(
                           readOnly: true,
                           cursorColor: Colors.black,
                           controller: _emailController,
                           style: TextStyle(
-                            fontSize: 40.rt,
+                            fontSize: 38.rt,
                             fontWeight: FontWeight.w500,
                             color: Color(0xFF8D8D8D),
                           ),
                           decoration: InputDecoration(
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
+                            labelText: 'Email',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8B8B8B),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
+                            floatingLabelStyle: TextStyle(
+                              fontWeight: FontWeight.w500,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8D8D8D),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12.rw,),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                             ),
                           ),
                         ),
-                        15.verticalSpace,
+                        25.verticalSpace,
                         TextField(
                           cursorColor: Colors.black,
                           controller: _mobileController,
@@ -411,7 +418,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           decoration: InputDecoration(
                             hintText: 'mobile number',
                             hintStyle: TextStyle(
-                              fontSize: 40.rt,
+                              fontSize: 35.rt,
                               fontWeight: FontWeight.w500,
                               color: Colors.black,
                             ),
@@ -434,17 +441,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ],
                               ),
                             ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                             ),
                           ),
                           onChanged: (value){
@@ -485,33 +488,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             ),
                           ],
                         ),
-                        10.verticalSpace,
+                        50.verticalSpace,
                         TextField(
                           cursorColor: Colors.black,
                           controller: _oldPasswordController,
                           style: TextStyle(
-                            fontSize: 40.rt,
+                            fontSize: 38.rt,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'Old Password',
-                            hintStyle: TextStyle(
-                              fontSize: 40.rt,
+                            labelText: 'Old Password',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8B8B8B),
+                            ),
+                            floatingLabelStyle: TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8D8D8D),
                             ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  show = !show;
+                                });
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 60.rw),
+                                child: SizedBox(
+                                  width: 24.rw,
+                                  height: 24.rh,
+                                  child: Image.asset(
+                                    show
+                                        ? 'assets/images/show.png'
+                                        : 'assets/images/invisible.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
                               ),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12.rw,),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                             ),
                           ),
                           onChanged: (value){
@@ -521,33 +547,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             });
                           },
                         ),
-                        15.verticalSpace,
+                        30.verticalSpace,
                         TextField(
                           cursorColor: Colors.black,
                           controller: _passwordController,
                           style: TextStyle(
-                            fontSize: 40.rt,
+                            fontSize: 38.rt,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'New Password',
-                            hintStyle: TextStyle(
-                              fontSize: 40.rt,
+                            labelText: 'New Password',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8B8B8B),
+                            ),
+                            floatingLabelStyle: TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8D8D8D),
                             ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  show1 = !show1;
+                                });
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 60.rw),
+                                child: SizedBox(
+                                  width: 24.rw,
+                                  height: 24.rh,
+                                  child: Image.asset(
+                                    show1
+                                        ? 'assets/images/show.png'
+                                        : 'assets/images/invisible.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
                               ),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12.rw,),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                             ),
                           ),
                           onChanged: (value){
@@ -557,33 +606,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             });
                           },
                         ),
-                        15.verticalSpace,
+                        30.verticalSpace,
                         TextField(
                           cursorColor: Colors.black,
                           controller: _confirmPasswordController,
                           style: TextStyle(
-                            fontSize: 40.rt,
+                            fontSize: 38.rt,
                             fontWeight: FontWeight.w500,
                             color: Colors.black,
                           ),
                           decoration: InputDecoration(
-                            hintText: 'Re-Enter New Password',
-                            hintStyle: TextStyle(
-                              fontSize: 40.rt,
+                            labelText: 'Re-Enter New Password',
+                            floatingLabelBehavior: FloatingLabelBehavior.auto,
+                            labelStyle: TextStyle(
+                              fontWeight: FontWeight.w400,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8B8B8B),
+                            ),
+                            floatingLabelStyle: TextStyle(
                               fontWeight: FontWeight.w500,
-                              color: Colors.black,
+                              fontSize: 35.rt,
+                              color: Color(0xFF8D8D8D),
                             ),
-                            enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
+                            suffixIcon: GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  show2 = !show2;
+                                });
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.only(right: 60.rw),
+                                child: SizedBox(
+                                  width: 24.rw,
+                                  height: 24.rh,
+                                  child: Image.asset(
+                                    show2
+                                        ? 'assets/images/show.png'
+                                        : 'assets/images/invisible.png',
+                                    fit: BoxFit.contain,
+                                  ),
+                                ),
                               ),
                             ),
-                            focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                color: Colors.black,
-                                width: 1,
-                              ),
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12.rw,),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.rs),
+                              borderSide: BorderSide(color: Color(0xFFC0C0C0)),
                             ),
                           ),
                           onChanged: (value){
@@ -620,9 +692,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(
                               'DELETE ACCOUNT',
                               style: TextStyle(
-                                  color: Color(0xFFFFFFFF),
-                                  fontSize: 38.rt,
-                                  fontWeight: FontWeight.w500
+                                color: Color(0xFFFFFFFF),
+                                fontSize: 38.rt,
+                                fontWeight: FontWeight.w500
                               ),
                               textAlign: TextAlign.center,
                             ),
@@ -630,7 +702,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         30.horizontalSpace,
                         GestureDetector(
-                          onTap: (){},
+                          onTap: (){
+                            provider.logOut(context);
+                          },
                           child: Container(
                             decoration: BoxDecoration(
                               color: Color(0xFFFFFFFF),
@@ -644,9 +718,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             child: Text(
                               'LOG OUT',
                               style: TextStyle(
-                                  color: Color(0xFF000000),
-                                  fontSize: 38.rt,
-                                  fontWeight: FontWeight.w500
+                                color: Color(0xFF000000),
+                                fontSize: 38.rt,
+                                fontWeight: FontWeight.w500
                               ),
                               textAlign: TextAlign.center,
                             ),

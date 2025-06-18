@@ -35,7 +35,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Image.asset('assets/images/image.png', fit: BoxFit.cover),
               ),
               Positioned(
-                top: 25.rh,
+                top: 20.rh,
                 left: 0,
                 right: 0,
                 child: SvgPicture.asset(
@@ -60,7 +60,7 @@ class _AccountScreenState extends State<AccountScreen> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10.rw, vertical: 40.rh),
+                      padding: EdgeInsets.symmetric(vertical: 40.rh),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -120,7 +120,7 @@ class _AccountScreenState extends State<AccountScreen> {
                                     user[0].firstName,
                                     style: TextStyle(
                                       color: Color(0xFFFFFFFF),
-                                      fontSize: 42.rt,
+                                      fontSize: 40.rt,
                                       fontWeight: FontWeight.w400
                                     ),
                                   ),
@@ -128,27 +128,16 @@ class _AccountScreenState extends State<AccountScreen> {
                               ),
                               5.verticalSpace,
                               Text(
-                                '${user[0].mobile} \n| ${user[0].email}',
+                                '${user[0].mobile} | ${user[0].email}',
                                 style: TextStyle(
                                   color: Color(0xFFFFFFFF),
-                                  fontSize: 42.rt,
+                                  fontSize: 40.rt,
                                   fontWeight: FontWeight.w400,
                                 ),
                                 overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                softWrap: false,
                               ),
-                              // Text(
-                              //   user[0].email,
-                              //   style: TextStyle(
-                              //     color: Color(0xFFFFFFFF),
-                              //     fontSize: 42.rt,
-                              //     fontWeight: FontWeight.w400,
-                              //   ),
-                              // )
                             ],
                           ),
-                          100.horizontalSpace,
                           GestureDetector(
                             onTap: (){
                               Navigator.push(
@@ -193,9 +182,9 @@ class _AccountScreenState extends State<AccountScreen> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(30.rs),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 80.rw, vertical: 10.rh),
+                        padding: EdgeInsets.symmetric(horizontal: 100.rw, vertical: 10.rh),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: List.generate(2, (index){
                             final labels = ['ORDERS', 'ADDRESSES'];
                             return Padding(
@@ -208,27 +197,14 @@ class _AccountScreenState extends State<AccountScreen> {
                                 },
                                 child: Container(
                                   decoration: BoxDecoration(
-                                    color: selectedTab == index
-                                        ?Color(0xFF1E4489):Color(0xFFFFFFFF),
+                                    color: Color(0xFFFFFFFF),
                                     borderRadius: BorderRadius.circular(20.rs),
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.black.withOpacity(0.08),
-                                        offset: const Offset(4, 4),
-                                        blurRadius: 4,
-                                      ),
-                                    ],
-                                    border: Border.all(
-                                      color: Colors.transparent,
-                                      width: 2,
-                                    ),
                                   ),
-                                  padding: EdgeInsets.symmetric(horizontal: 40.rw, vertical: 20.rh),
+                                  padding: EdgeInsets.symmetric(horizontal: 80.rw, vertical: 20.rh),
                                   child: Text(
                                     labels[index],
                                     style: TextStyle(
-                                      color: selectedTab == index
-                                          ? Color(0xFFFFFFFF):Color(0xFF1E4489),
+                                      color: Color(0xFF1E4489),
                                       fontSize: 36.rt,
                                       fontWeight: FontWeight.w500,
                                     ),
@@ -240,7 +216,6 @@ class _AccountScreenState extends State<AccountScreen> {
                         ),
                       ),
                     ),
-                    // 30.verticalSpace,
                     _buildTabContent(provider),
                   ],
                 ),
@@ -618,52 +593,61 @@ Widget _buildItem(Map<String, dynamic> bestSeller, ShortProvider provider, Build
             ClipRRect(
               borderRadius: BorderRadius.circular(20.rs),
               child: Center(
-                child: Image.network(
-                  bestSeller['image'],
-                  width: 350.rw,
-                  height: 350.rh,
-                  fit: BoxFit.cover,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.rs),
+                  child: Image.network(
+                    bestSeller['image'],
+                    width: 350.rw,
+                    height: 300.rh,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
             20.verticalSpace,
-            Text(
-              bestSeller['title'],
-              style: TextStyle(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.rh),
+              child: Text(
+                bestSeller['title'],
+                style: TextStyle(
                   color: Color(0xFF1E4489),
                   fontSize: 30.rt,
                   fontWeight: FontWeight.w600
+                ),
+                textAlign: TextAlign.start,
               ),
-              textAlign: TextAlign.start,
             ),
             20.verticalSpace,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '£${bestSeller['final_price']}',
-                  style: TextStyle(
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10.rh),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '£${bestSeller['final_price']}',
+                    style: TextStyle(
                       color: Color(0xFFEE2938),
                       fontSize: 30.rt,
                       fontWeight: FontWeight.w600
-                  ),
-                ),
-                Container(
-                  width: 40.rw,
-                  height: 40.rh,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Color(0xFFEF3645),
-                  ),
-                  child: Center(
-                    child: Icon(
-                      Icons.add,
-                      color: Color(0xFFFFFFFF),
-                      size: 30.rt,
                     ),
                   ),
-                ),
-              ],
+                  Container(
+                    width: 40.rw,
+                    height: 40.rh,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Color(0xFFEF3645),
+                    ),
+                    child: Center(
+                      child: Icon(
+                        Icons.add,
+                        color: Color(0xFFFFFFFF),
+                        size: 30.rt,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             )
           ],
         ),

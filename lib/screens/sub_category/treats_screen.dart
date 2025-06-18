@@ -40,6 +40,9 @@ class _TreatsScreenState extends State<TreatsScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+                            width: 316.rw,
+                            height: 130.rh,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100.rs),
@@ -53,6 +56,7 @@ class _TreatsScreenState extends State<TreatsScreen> {
                                 ),
                               ],
                             ),
+                            padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
                             child: IconButton(
                               onPressed: () => Navigator.pop(context),
                               icon: Row(
@@ -96,7 +100,7 @@ class _TreatsScreenState extends State<TreatsScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SearchScreen(),
+                                        builder: (context) => SearchScreen(showBackButton: true),
                                       ),
                                     );
                                   },
@@ -164,8 +168,8 @@ class _TreatsScreenState extends State<TreatsScreen> {
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 3,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 10,
+                            crossAxisSpacing: 10,
                             childAspectRatio: 0.9,
                           ),
                           itemCount: cake.length,
@@ -200,6 +204,7 @@ Widget _buildCakes(Map<String, dynamic> cake, BuildContext context, ShortProvide
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
+          flex: 3,
           child: GestureDetector(
             onTap: () async {
               final int? categoryId = cake['category_id'];
@@ -226,22 +231,25 @@ Widget _buildCakes(Map<String, dynamic> cake, BuildContext context, ShortProvide
               borderRadius: BorderRadius.circular(20.rs),
               child: Image.asset(
                   'assets/images/category(1).png',
-                  width: 350.rw,
-                  height: 350.rh,
+                  width: 276.rw,
+                  height: 276.rh,
                   fit: BoxFit.cover
               ),
             ),
           ),
         ),
         10.verticalSpace,
-        Text(
-          cake['title'],
-          style: TextStyle(
-            color: Color(0xFF283577),
-            fontSize: 40.rt,
-            fontWeight: FontWeight.w700,
+        Expanded(
+          child: Text(
+            cake['title'],
+            style: TextStyle(
+              color: Color(0xFF283577),
+              fontSize: 40.rt,
+              fontWeight: FontWeight.w700,
+              overflow: TextOverflow.ellipsis
+            ),
+            textAlign: TextAlign.center,
           ),
-          textAlign: TextAlign.center,
         ),
       ],
     ),

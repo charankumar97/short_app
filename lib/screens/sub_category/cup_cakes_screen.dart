@@ -39,6 +39,9 @@ class _CupCakesScreenState extends State<CupCakesScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+                            width: 316.rw,
+                            height: 130.rh,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100.rs),
@@ -52,6 +55,7 @@ class _CupCakesScreenState extends State<CupCakesScreen> {
                                 ),
                               ],
                             ),
+                            padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
                             child: IconButton(
                               onPressed: () => Navigator.pop(context),
                               icon: Row(
@@ -95,7 +99,7 @@ class _CupCakesScreenState extends State<CupCakesScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SearchScreen(),
+                                        builder: (context) => SearchScreen(showBackButton: true),
                                       ),
                                     );
                                   },
@@ -162,8 +166,8 @@ class _CupCakesScreenState extends State<CupCakesScreen> {
                           physics: NeverScrollableScrollPhysics(),
                           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 2,
-                            mainAxisSpacing: 20,
-                            crossAxisSpacing: 20,
+                            mainAxisSpacing: 15,
+                            crossAxisSpacing: 10,
                             childAspectRatio: 0.9,
                           ),
                           itemCount: cake.length,
@@ -220,28 +224,51 @@ Widget _buildCakes(Map<String, dynamic> cake, BuildContext context, ShortProvide
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
+            flex: 2,
             child: GestureDetector(
-              onTap: (){},
+              onTap: (){
+                final int? id = cake['id'];
+                print(id);
+                if(id != null){
+                  provider.fetchCakeSizes(id);
+                  provider.fetchSponges(id);
+                  provider.fetchFilling(id);
+                  provider.fetchDescription(id);
+                  provider.selectedProduct(cake);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ProductScreen(),
+                    ),
+                  );
+                }else{
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Invalid ID')),
+                  );
+                }
+              },
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(20.rs),
                 child: Image.network(
                   cake['image'],
                   width: 400.rw,
-                  height: 400.rh,
+                  height: 450.rh,
                   fit: BoxFit.cover
                 ),
               ),
             ),
           ),
           10.verticalSpace,
-          Text(
-            cake['title'],
-            style: TextStyle(
-              color: Color(0xFF283577),
-              fontSize: 40.rt,
-              fontWeight: FontWeight.w700,
+          Expanded(
+            child: Text(
+              cake['title'],
+              style: TextStyle(
+                color: Color(0xFF283577),
+                fontSize: 40.rt,
+                fontWeight: FontWeight.w700,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
           ),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: 20.rw, vertical: 20.rh),

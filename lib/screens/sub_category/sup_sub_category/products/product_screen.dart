@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:short_app/provider/short_provider.dart';
 import 'package:short_app/screens/cart_screen.dart';
 import 'package:short_app/screens/sub_category/sup_sub_category/products/pop_screens/description_popup.dart';
-
 import '../../../../models/product_model.dart';
 import '../../../account_screen.dart';
 import '../../../search_screen.dart';
@@ -27,6 +26,13 @@ class _ProductScreenState extends State<ProductScreen> {
   String selectedSpongeTitle = '';
   String selectedFillingTitle = '';
   String message = '';
+  int? selectedSizeId;
+  int? selectedSpongeId;
+  int? selectedFillingId;
+  int? selectedProductId;
+  bool sizeError = false;
+  bool spongeError = false;
+  bool fillingError = false;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +45,7 @@ class _ProductScreenState extends State<ProductScreen> {
       final int itemCount = provider.selectProduct['sku'] == item['sku']
           ? provider.selectProduct['qty'] ?? 1
           : 0;
+      final selectedProductId = item['id'];
       return SafeArea(
         child: Scaffold(
           body: SingleChildScrollView(
@@ -68,6 +75,9 @@ class _ProductScreenState extends State<ProductScreen> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Container(
+                            width: 330.rw,
+                            height: 130.rh,
+                            alignment: Alignment.center,
                             decoration: BoxDecoration(
                               color: Colors.white,
                               borderRadius: BorderRadius.circular(100.rs),
@@ -77,9 +87,11 @@ class _ProductScreenState extends State<ProductScreen> {
                                   color: Color.fromRGBO(250, 18, 40, 0.15),
                                   offset: Offset(0, 4),
                                   blurRadius: 50,
+                                  spreadRadius: 0,
                                 ),
                               ],
                             ),
+                            padding: EdgeInsets.symmetric(horizontal: 20.rw, vertical: 10.rh),
                             child: TextButton.icon(
                               onPressed: () {
                                 Navigator.pop(context);
@@ -120,7 +132,7 @@ class _ProductScreenState extends State<ProductScreen> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => SearchScreen(),
+                                        builder: (context) => SearchScreen(showBackButton: true),
                                       ),
                                     );
                                   },
@@ -170,7 +182,6 @@ class _ProductScreenState extends State<ProductScreen> {
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(20.rs),
                     border: Border(
                       top: BorderSide(
                         color: Color(0xFF0C1788),
@@ -178,201 +189,172 @@ class _ProductScreenState extends State<ProductScreen> {
                       ),
                     ),
                   ),
-                  padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 30.rh),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  padding: EdgeInsets.symmetric(horizontal: 50.rw, vertical: 50.rh),
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Expanded(
-                        flex: 8,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'SKU: ${item['sku']}',
-                              style: TextStyle(
-                                color: const Color.fromRGBO(40, 53, 119, 0.6),
-                                fontSize: 28.rt,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                            10.verticalSpace,
-                            Text(
-                              item['title'],
-                              style: TextStyle(
-                                color: const Color(0xFF283577),
-                                fontSize: 60.rt,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            10.verticalSpace,
-                            Text(
-                              '£${item['final_price']}',
-                              style: TextStyle(
-                                color: const Color(0xFFEF3645),
-                                fontSize: 60.rt,
-                                fontWeight: FontWeight.w700,
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                            20.verticalSpace,
-                            SizedBox(
-                              height: 130.rh,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                padding: EdgeInsets.only(right: 80.rw),
-                                itemCount: ingredients.length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.only(right: 20.rw),
-                                    child: _buildIngredients(ingredients[index]),
-                                  );
-                                },
-                              ),
-                            ),
-                            30.verticalSpace,
-                            Row(
-                              children: [
-                                GestureDetector(
-                                  onTap: (){
-                                    double screenWidth = MediaQuery.of(context).size.width;
-                                    int tabIndex = 0;
-                                    if (screenWidth > 800) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => DescriptionPopup(selectedTab: tabIndex),
-                                        ),
-                                      );
-                                    } else {
-                                      _showBottomSheet(context, tabIndex);
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.rs),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.08),
-                                          offset: Offset(4, 4),
-                                          blurRadius: 4,
-                                        ),
-                                      ],
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 40.rw, vertical: 30.rh),
-                                    child: Text(
-                                      'Description',
-                                      style: TextStyle(
-                                          color: Color(0xFF2D46C1),
-                                          fontSize: 34.rt,
-                                          fontWeight: FontWeight.w400
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                10.horizontalSpace,
-                                GestureDetector(
-                                  onTap: (){
-                                    double screenWidth = MediaQuery.of(context).size.width;
-                                    int tabIndex = 1;
-                                    if (screenWidth > 800) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => DescriptionPopup(selectedTab: tabIndex),
-                                        ),
-                                      );
-                                    } else {
-                                      _showBottomSheet(context, tabIndex);
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.rs),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.08),
-                                          offset: Offset(4, 4),
-                                          blurRadius: 4,
-                                        ),
-                                      ],
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 40.rw, vertical: 30.rh),
-                                    child: Text(
-                                      'Ingredients',
-                                      style: TextStyle(
-                                          color: Color(0xFF2D46C1),
-                                          fontSize: 34.rt,
-                                          fontWeight: FontWeight.w400
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                10.horizontalSpace,
-                                GestureDetector(
-                                  onTap: (){
-                                    double screenWidth = MediaQuery.of(context).size.width;
-                                    int tabIndex = 2;
-                                    if (screenWidth > 800) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => DescriptionPopup(selectedTab: tabIndex),
-                                        ),
-                                      );
-                                    } else {
-                                      _showBottomSheet(context, tabIndex);
-                                    }
-                                  },
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(10.rs),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.08),
-                                          offset: Offset(4, 4),
-                                          blurRadius: 4,
-                                        ),
-                                      ],
-                                    ),
-                                    padding: EdgeInsets.symmetric(horizontal: 40.rw, vertical: 30.rh),
-                                    child: Text(
-                                      'Disclaimer',
-                                      style: TextStyle(
-                                          color: Color(0xFF2D46C1),
-                                          fontSize: 34.rt,
-                                          fontWeight: FontWeight.w400
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                      Text(
+                        'SKU: ${item['sku']}',
+                        style: TextStyle(
+                          color: const Color.fromRGBO(40, 53, 119, 0.6),
+                          fontSize: 28.rt,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Expanded(
-                        flex: 2,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 200.rw,
-                              height: 200.rh,
+                      10.verticalSpace,
+                      Text(
+                        item['title'],
+                        style: TextStyle(
+                          color: const Color(0xFF283577),
+                          fontSize: 60.rt,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      10.verticalSpace,
+                      Text(
+                        '£${item['final_price']}',
+                        style: TextStyle(
+                          color: const Color(0xFFEF3645),
+                          fontSize: 60.rt,
+                          fontWeight: FontWeight.w700,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      20.verticalSpace,
+                      SizedBox(
+                        height: 130.rh,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          padding: EdgeInsets.only(right: 80.rw),
+                          itemCount: ingredients.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: EdgeInsets.only(right: 20.rw),
+                              child: _buildIngredients(ingredients[index]),
+                            );
+                          },
+                        ),
+                      ),
+                      30.verticalSpace,
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: (){
+                              double screenWidth = MediaQuery.of(context).size.width;
+                              int tabIndex = 0;
+                              if (screenWidth > 800) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DescriptionPopup(selectedTab: tabIndex),
+                                  ),
+                                );
+                              } else {
+                                _showBottomSheet(context, tabIndex);
+                              }
+                            },
+                            child: Container(
                               decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20.rs),
-                                image: const DecorationImage(
-                                  image: AssetImage('assets/images/image 189.png'),
-                                  fit: BoxFit.contain,
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.rs),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.08),
+                                    offset: Offset(4, 4),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 40.rw, vertical: 30.rh),
+                              child: Text(
+                                'Description',
+                                style: TextStyle(
+                                    color: Color(0xFF2D46C1),
+                                    fontSize: 34.rt,
+                                    fontWeight: FontWeight.w400
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                          10.horizontalSpace,
+                          GestureDetector(
+                            onTap: (){
+                              double screenWidth = MediaQuery.of(context).size.width;
+                              int tabIndex = 1;
+                              if (screenWidth > 800) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DescriptionPopup(selectedTab: tabIndex),
+                                  ),
+                                );
+                              } else {
+                                _showBottomSheet(context, tabIndex);
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.rs),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.08),
+                                    offset: Offset(4, 4),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 40.rw, vertical: 30.rh),
+                              child: Text(
+                                'Ingredients',
+                                style: TextStyle(
+                                    color: Color(0xFF2D46C1),
+                                    fontSize: 34.rt,
+                                    fontWeight: FontWeight.w400
+                                ),
+                              ),
+                            ),
+                          ),
+                          10.horizontalSpace,
+                          GestureDetector(
+                            onTap: (){
+                              double screenWidth = MediaQuery.of(context).size.width;
+                              int tabIndex = 2;
+                              if (screenWidth > 800) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DescriptionPopup(selectedTab: tabIndex),
+                                  ),
+                                );
+                              } else {
+                                _showBottomSheet(context, tabIndex);
+                              }
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.rs),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.black.withOpacity(0.08),
+                                    offset: Offset(4, 4),
+                                    blurRadius: 4,
+                                  ),
+                                ],
+                              ),
+                              padding: EdgeInsets.symmetric(horizontal: 40.rw, vertical: 30.rh),
+                              child: Text(
+                                'Disclaimer',
+                                style: TextStyle(
+                                    color: Color(0xFF2D46C1),
+                                    fontSize: 34.rt,
+                                    fontWeight: FontWeight.w400
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
@@ -434,11 +416,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                 setState(() {
                                   sizeIndex = index;
                                   selectedSizeTitle = cakeSize['title'];
+                                  selectedSizeId = cakeSize['id'];
+                                  sizeError = false;
                                 });
-                                // final priceRaw = cakeSize['adjustment_sell_price'];
-                                // final price = double.tryParse(priceRaw.toString()) ?? 0.0;
-                                // print(price);
-                                // provider.selectedSizePrice(price);
                               },
                               child: Container(
                                 width: 420.rw,
@@ -477,7 +457,18 @@ class _ProductScreenState extends State<ProductScreen> {
                           );
                           },
                         ),
-                      )
+                      ),
+                      if (sizeError)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
+                          child: Text(
+                            'Please select a Size option.',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 36.rt,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
@@ -533,6 +524,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   setState(() {
                                     spongeIndex = index;
                                     selectedSpongeTitle= spong['title'];
+                                    selectedSpongeId = spong['id'];
+                                    spongeError = false;
                                   });
                                 },
                                 child: Container(
@@ -566,9 +559,9 @@ class _ProductScreenState extends State<ProductScreen> {
                                             Text(
                                               spong['title'],
                                               style: TextStyle(
-                                                  color: Color(0xFF000000),
-                                                  fontSize: 40.rt,
-                                                  fontWeight: FontWeight.w600
+                                                color: Color(0xFF000000),
+                                                fontSize: 40.rt,
+                                                fontWeight: FontWeight.w600
                                               ),
                                             ),
                                             SvgPicture.network(
@@ -587,12 +580,24 @@ class _ProductScreenState extends State<ProductScreen> {
                             );
                           },
                         ),
-                      )
+                      ),
+                      if (spongeError)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
+                          child: Text(
+                            'Please select a sponge option.',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 36.rt,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
                 ),
                 20.verticalSpace,
-                Container(
+                fill.isNotEmpty
+                    ? Container(
                   decoration: BoxDecoration(
                     color: Color(0xFFF5F6FF),
                     borderRadius: BorderRadius.circular(20.rs),
@@ -640,6 +645,8 @@ class _ProductScreenState extends State<ProductScreen> {
                                   setState(() {
                                     fillingIndex = index;
                                     selectedFillingTitle = filling['title'];
+                                    selectedFillingId = filling['id'];
+                                    fillingError = false;
                                   });
                                 },
                                 child: Container(
@@ -680,10 +687,22 @@ class _ProductScreenState extends State<ProductScreen> {
                             );
                           },
                         ),
-                      )
+                      ),
+                      if (fillingError)
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 10.rh),
+                          child: Text(
+                            'Please select a filling option.',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 36.rt,
+                            ),
+                          ),
+                        ),
                     ],
                   ),
-                ),
+                )
+                    :SizedBox.shrink(),
                 20.verticalSpace,
                 Container(
                   decoration: BoxDecoration(
@@ -778,7 +797,7 @@ class _ProductScreenState extends State<ProductScreen> {
                   ),
                 ],
               ),
-              padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 50.rh),
+              padding: EdgeInsets.symmetric(horizontal: 30.rw, vertical: 30.rh),
               child: Column(
                 children: [
                   Container(
@@ -872,30 +891,48 @@ class _ProductScreenState extends State<ProductScreen> {
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.rw),
                     child: GestureDetector(
-                      onTap: (){
-                        final sizeTitle = selectedSizeTitle;
-                        final spongTitle = selectedSpongeTitle;
-                        final fillTitle = selectedFillingTitle;
-                        final text = message;
-                        // final double price = provider.selectSizePrice;
-                        provider.selectedItem(sizeTitle, spongTitle, fillTitle, text);
-                        final product = Product(
-                          title: item['title'],
-                          sellPrice: item['sell_price'].toDouble(),
-                          id: item['id'],
-                          sku: item['sku'],
-                          qty: itemCount,
-                          total: item['final_price'],
-                          finalPrice: item['final_price'],
-                          image: item['image']
-                        );
-                        provider.addProducts(product);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => CartScreen(),
-                          ),
-                        );
+                      onTap: () {
+                        final hasSize = selectedSizeId != null;
+                        final hasSponge = selectedSpongeId != null;
+                        final hasFilling = selectedFillingId != null;
+
+                        setState(() {
+                          sizeError = !hasSize;
+                          spongeError = !hasSponge;
+                          fillingError = !hasFilling;
+                        });
+
+                        if (hasSize && hasSponge && hasFilling) {
+                          final sizeTitle = selectedSizeTitle;
+                          final spongTitle = selectedSpongeTitle;
+                          final fillTitle = selectedFillingTitle;
+                          final text = message;
+                          final sizeId = selectedSizeId;
+                          final spongeId = selectedSpongeId;
+                          final fillingId = selectedFillingId;
+                          final productId = selectedProductId;
+
+                          provider.selectedItemId(sizeId!, spongeId!, fillingId!, productId!);
+                          provider.selectedItem(sizeTitle, spongTitle, fillTitle, text);
+                          provider.fetchProductPrice();
+
+                          final product = Product(
+                            title: item['title'],
+                            sellPrice: item['sell_price'].toDouble(),
+                            id: item['id'],
+                            sku: item['sku'],
+                            qty: itemCount,
+                            total: item['final_price'],
+                            finalPrice: item['final_price'],
+                            image: item['image'],
+                          );
+
+                          provider.addProducts(product);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => CartScreen(showBackButton: true)),
+                          );
+                        }
                       },
                       child: Container(
                         width: double.infinity,
